@@ -1,0 +1,1844 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Trening">
+<link rel="apple-touch-icon" href="icon.png">
+<link rel="icon" href="icon.png" type="image/png">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Space+Grotesk:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<title>Trening</title>
+<style>
+  :root {
+    --bg: #EEE8DF;
+    --surface: #f7f4f0;
+    --surface2: #e8e2d9;
+    --border: #d4cec6;
+    --accent: #2C365A;
+    --accent-dim: rgba(44,54,90,0.1);
+    --text: #2C365A;
+    --text2: #7a7570;
+    --text3: #b0aaa3;
+    --red: #c0392b;
+    --green: #2C365A;
+    --radius: 14px;
+    --island-solid: rgba(44,54,90,0.97);
+    --tab-h: 50px;
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --tab-total: calc(var(--tab-h) + var(--safe-bottom));
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    height: 100%;
+    overscroll-behavior: none;
+  }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+    min-height: 100dvh;
+    overflow-x: hidden;
+  }
+  /* TAB BAR BASE */
+  .tabs {
+    position: fixed;
+    bottom: calc(var(--safe-bottom) + 16px);
+    left: 50%; transform: translateX(-50%);
+    width: calc(100% - 40px); max-width: 400px;
+    border-radius: 100px;
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    gap: 0;
+    z-index: 100;
+    overflow: hidden;
+    transition: background 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease;
+  }
+  /* SOLID mode — uses CSS vars so it works with all themes */
+  .tabs.solid {
+    background: var(--island-solid);
+    border: 1px solid var(--tab-border, var(--border));
+    box-shadow: none;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  .tabs.solid .tab-btn { color: var(--tab-inactive, var(--text3)); }
+  .tabs.solid .tab-btn.active { color: var(--tab-active, var(--active-text)); }
+  .tabs.solid .tab-pill {
+    background: var(--tab-pill-bg, rgba(255,255,255,0.15));
+    border: 0.5px solid var(--tab-pill-border, rgba(255,255,255,0.2));
+    box-shadow: none;
+  }
+  /* Dark island themes (ocean, dark ocean, dusk) */
+  .tabs.solid.dark-island .tab-btn { color: rgba(238,232,223,0.4); }
+  .tabs.solid.dark-island .tab-btn.active { color: rgba(238,232,223,1); }
+.tabs.bar-ocean {
+    background: #EEE8DF !important;
+    border: 1px solid #2C365A !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  .tabs.bar-ocean .tab-btn { color: rgba(44,54,90,0.35) !important; }
+  .tabs.bar-ocean .tab-btn.active { color: #2C365A !important; }
+  .tabs.bar-ocean .tab-pill { background: transparent !important; border: 0.5px solid #2C365A !important; box-shadow: none !important; opacity: 1 !important; }
+
+  .tabs.bar-dark {
+    background: #1c1c1e !important;
+    border: 1px solid #3a3a3c !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  .tabs.bar-dark .tab-btn { color: rgba(229,229,234,0.35) !important; }
+  .tabs.bar-dark .tab-btn.active { color: #8eacc8 !important; }
+  .tabs.bar-dark .tab-pill { background: transparent !important; border: 0.5px solid #3a3a3c !important; box-shadow: none !important; opacity: 1 !important; }
+
+  .tabs.bar-studio {
+    background: #f0d0d0 !important;
+    border: 1px solid #1a1a1a !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  .tabs.bar-studio .tab-btn { color: rgba(0,0,0,0.35) !important; }
+  .tabs.bar-studio .tab-btn.active { color: #1a1a1a !important; }
+  .tabs.bar-studio .tab-pill { background: transparent !important; border: 0.5px solid #1a1a1a !important; box-shadow: none !important; opacity: 1 !important; }
+
+  .tabs.bar-studiodark {
+    background: #111111 !important;
+    border: 1px solid #f0d0d0 !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  .tabs.bar-studiodark .tab-btn { color: rgba(240,208,208,0.4) !important; }
+  .tabs.bar-studiodark .tab-btn.active { color: #f0d0d0 !important; }
+  .tabs.bar-studiodark .tab-pill { background: transparent !important; border: 0.5px solid #f0d0d0 !important; box-shadow: none !important; opacity: 1 !important; }
+
+  .tabs.bar-sand {
+    background: #f0e8d8 !important;
+    border: 1px solid #1a1a1a !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  .tabs.bar-sand .tab-btn { color: rgba(0,0,0,0.35) !important; }
+  .tabs.bar-sand .tab-btn.active { color: #1a1a1a !important; }
+  .tabs.bar-sand .tab-pill { background: transparent !important; border: 0.5px solid #1a1a1a !important; box-shadow: none !important; opacity: 1 !important; }
+
+  .tabs.bar-form {
+    background: #ede8e0 !important;
+    border: 1px solid #1a1714 !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  .tabs.bar-form .tab-btn { color: rgba(26,23,20,0.35) !important; }
+  .tabs.bar-form .tab-btn.active { color: #1a1714 !important; }
+  .tabs.bar-form .tab-pill { background: transparent !important; border: 0.5px solid #1a1714 !important; box-shadow: none !important; opacity: 1 !important; }
+  /* LIQUID GLASS mode */
+  .tabs.glass {
+    background: rgba(255,255,255,0.01);
+    border: 0.5px solid rgba(255,255,255,0.08);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.06), inset 0 -1px 0 rgba(0,0,0,0.02);
+    backdrop-filter: saturate(180%) blur(40px) brightness(1.08);
+    -webkit-backdrop-filter: saturate(180%) blur(40px) brightness(1.08);
+  }
+  .tabs.glass .tab-btn { color: var(--text3); }
+  .tabs.glass .tab-btn.active { color: var(--accent); }
+  .tabs.glass .tab-pill {
+    background: rgba(255,255,255,0.12);
+    border: 0.5px solid rgba(255,255,255,0.2);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1), inset 0 0.5px 0 rgba(255,255,255,0.3);
+  }
+  /* Refraction shimmer — only in glass mode */
+  .tabs.glass::before {
+    content: '';
+    position: absolute; inset: 0;
+    border-radius: 100px;
+    background: linear-gradient(135deg,
+      rgba(255,255,255,0.03) 0%,
+      rgba(255,255,255,0.0) 50%,
+      rgba(255,255,255,0.02) 100%);
+    pointer-events: none;
+  }
+  /* Sliding active pill */
+  .tab-pill {
+    position: absolute;
+    height: calc(100% - 10px);
+    border-radius: 100px;
+    background: rgba(255,255,255,0.12);
+    border: 0.5px solid rgba(255,255,255,0.2);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1), inset 0 0.5px 0 rgba(255,255,255,0.3);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: left 0.32s cubic-bezier(0.34,1.2,0.64,1), width 0.32s cubic-bezier(0.34,1.2,0.64,1);
+    pointer-events: none;
+    z-index: 0;
+    top: 5px;
+  }
+  .tab-btn {
+    border: none; background: none;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 4px;
+    color: var(--text3);
+    cursor: pointer;
+    flex: 1; height: 52px;
+    border-radius: 100px;
+    font-size: 10px; font-weight: 500; letter-spacing: 0.2px;
+    transition: color 0.25s ease;
+    position: relative; z-index: 1;
+  }
+  .tab-btn.active { color: var(--accent); }
+  .tab-btn svg { width: 22px; height: 22px; transition: transform 0.25s cubic-bezier(0.34,1.4,0.64,1); }
+  .tab-btn.active svg { transform: scale(1.1); }
+  @keyframes tabpop {
+    0% { transform: scale(1); }
+    35% { transform: scale(0.88); }
+    100% { transform: scale(1.1); }
+  }
+  .tab-btn.pop svg { animation: tabpop 0.22s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+  /* PAGES */
+  .page { display: none; padding: 0 0 calc(var(--safe-bottom) + 96px); min-height: 100dvh; }
+  .page.active { display: block; }
+  /* HEADER */
+  .page-header {
+    padding: 16px 20px 16px;
+    position: sticky; top: 0;
+    background: rgba(238,232,223,0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    z-index: 10;
+    border-bottom: 1px solid var(--border);
+  }
+  .page-header h1 { font-size: 20px; font-weight: 600; letter-spacing: -0.3px; font-family: 'Poppins', sans-serif; }
+  .page-header .sub { font-size: 13px; color: var(--text2); margin-top: 2px; }
+  /* SESSION PICKER */
+  .session-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 20px; }
+  .session-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 16px;
+    cursor: pointer;
+    transition: all 0.15s;
+    -webkit-user-select: none; user-select: none;
+  }
+  .session-card:active { transform: scale(0.97); background: var(--surface2); }
+  .session-card .s-label { font-size: 18px; font-weight: 700; color: var(--accent); }
+  .session-card .s-name { font-size: 13px; color: var(--text2); margin-top: 4px; }
+  .session-card .s-last { font-size: 11px; color: var(--text3); margin-top: 8px; }
+  /* WORKOUT VIEW */
+  #workout-view { display: none; }
+  #workout-view.active { display: block; }
+  .workout-header {
+    padding: 16px 20px 16px;
+    position: sticky; top: 0;
+    background: rgba(238,232,223,0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    z-index: 10;
+    border-bottom: 1px solid var(--border);
+  }
+  .workout-header-top { display: flex; align-items: center; gap: 12px; }
+  .back-btn {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: var(--surface); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; flex-shrink: 0;
+  }
+  .back-btn svg { width: 18px; height: 18px; color: var(--text); }
+  .workout-title { font-size: 20px; font-weight: 600; letter-spacing: -0.3px; font-family: 'Poppins', sans-serif; }
+  .workout-date { font-size: 13px; color: var(--text2); margin-top: 2px; }
+  /* EXERCISE CARD */
+  .ex-list { padding: 16px 20px; display: flex; flex-direction: column; gap: 12px; }
+  .ex-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .ex-card-head {
+    padding: 14px 16px 10px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .ex-card-name { font-size: 15px; font-weight: 600; font-family: 'Poppins', sans-serif; }
+  .sets-header {
+    display: grid; grid-template-columns: 26px 1fr 1fr 26px;
+    gap: 6px; padding: 0 16px 6px;
+    font-size: 11px; color: var(--text3); letter-spacing: 0.5px; text-transform: uppercase;
+  }
+  .sets-header span:first-child { text-align: center; }
+  .set-row {
+    display: grid; grid-template-columns: 26px 1fr 1fr 26px;
+    gap: 6px; align-items: center; padding: 5px 16px;
+  }
+  .stepper {
+    display: flex; align-items: center;
+    background: var(--surface2); border: 1px solid var(--border); border-radius: 8px;
+    overflow: hidden;
+  }
+  .stepper-btn {
+    width: 30px; height: 38px; flex-shrink: 0;
+    background: none; border: none;
+    color: var(--text2); font-size: 18px; line-height: 1;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: background 0.12s;
+    -webkit-user-select: none; user-select: none;
+  }
+  .stepper-btn:active { background: var(--border); }
+  .stepper input.set-input {
+    border: none; border-radius: 0;
+    border-left: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    background: none; flex: 1; min-width: 0;
+  }
+  .set-num {
+    width: 26px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; color: var(--text3); flex-shrink: 0;
+  }
+  .set-input {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-size: 16px;
+    font-family: inherit;
+    padding: 8px 10px;
+    width: 100%;
+    text-align: center;
+    -webkit-appearance: none;
+  }
+  .set-input:focus { outline: none; border-color: var(--accent); }
+  .set-input::placeholder { color: var(--text3); font-size: 15px; opacity: 1; }
+  .set-input::-webkit-inner-spin-button, .set-input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+  .set-input[type=number] { -moz-appearance: textfield; appearance: textfield; }
+  .set-del {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: none; border: 1px solid var(--border);
+    color: var(--text3); font-size: 16px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .add-set-btn {
+    margin: 8px 16px 14px;
+    background: var(--accent-dim);
+    border: none;
+    border-radius: 8px;
+    color: var(--accent);
+    font-size: 13px; font-family: inherit;
+    padding: 9px;
+    width: calc(100% - 32px);
+    cursor: pointer;
+  }
+  /* NOTES */
+  .notes-wrap { padding: 0 20px 12px; }
+  .notes-input {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 14px;
+    padding: 14px;
+    resize: none;
+    min-height: 72px;
+  }
+  .notes-input:focus { outline: none; border-color: var(--accent); }
+  .notes-input::placeholder { color: var(--text3); }
+  /* SAVE BTN */
+  .save-wrap { padding: 0 20px 20px; }
+  .save-btn {
+    width: 100%; padding: 16px;
+    background: var(--accent);
+    border: none; border-radius: var(--radius);
+    color: #EEE8DF; font-size: 16px; font-weight: 700;
+    font-family: inherit; cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  .save-btn:active { opacity: 0.85; }
+  /* HISTORY */
+  .hist-tabs {
+    display: flex; gap: 8px; padding: 16px 20px 0;
+    overflow-x: auto; -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .hist-tabs::-webkit-scrollbar { display: none; }
+  .hist-tab {
+    flex-shrink: 0;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 20px; color: var(--text2);
+    font-size: 13px; font-family: inherit; padding: 7px 14px;
+    cursor: pointer; white-space: nowrap; transition: all 0.15s;
+  }
+  .hist-tab.active { background: var(--accent); border-color: var(--accent); color: #EEE8DF; font-weight: 600; }
+  /* VIEW TOGGLE */
+  .view-toggle { display: flex; gap: 8px; padding: 12px 20px 0; }
+  .vtog {
+    flex: 1; background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; color: var(--text2);
+    font-size: 13px; font-family: inherit; padding: 8px;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .vtog.active { background: var(--surface2); border-color: var(--text3); color: var(--text); }
+  /* WORKOUT CARDS */
+  .hist-body { padding: 16px 20px; display: flex; flex-direction: column; gap: 12px; }
+  .wk-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+  .wk-card-head { padding: 14px 16px 10px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+  .wk-card-date { font-size: 13px; font-weight: 600; font-family: 'Poppins', sans-serif; }
+  .wk-card-del { background: none; border: none; color: var(--text3); font-size: 18px; cursor: pointer; padding: 0 4px; }
+  .wk-ex { padding: 10px 16px 12px; border-bottom: 1px solid var(--border); }
+  .wk-ex:last-child { border-bottom: none; }
+  .wk-ex-name { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+  .set-list { display: flex; flex-direction: column; gap: 3px; }
+  .set-list-row { font-size: 13px; color: var(--text2); display: flex; gap: 0; }
+  .set-reps { display: inline-block; width: 28px; text-align: right; flex-shrink: 0; }
+  .set-x { display: inline-block; width: 20px; text-align: center; color: var(--text3); flex-shrink: 0; }
+  .set-kg { color: var(--text2); }
+  .wk-notes { padding: 10px 16px; font-size: 12px; color: var(--text2); font-style: italic; background: var(--surface2); }
+  /* EXERCISE FOCUS */
+  .focus-ex-select { padding: 12px 20px 0; }
+  .focus-ex-select select {
+    width: 100%; background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; color: var(--text); font-family: inherit; font-size: 15px;
+    padding: 12px 14px; -webkit-appearance: none; appearance: none;
+  }
+  .chart-wrap { padding: 16px 20px 0; }
+  .chart-wrap svg { width: 100%; border-radius: 10px; background: var(--surface); }
+  .focus-sets { padding: 12px 20px; display: flex; flex-direction: column; gap: 8px; }
+  .focus-set-row { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; display: flex; justify-content: space-between; align-items: center; }
+  .focus-set-date { font-size: 12px; color: var(--text2); }
+  .focus-set-vals { display: flex; gap: 6px; }
+  /* EMPTY */
+  .empty { padding: 60px 20px; text-align: center; color: var(--text3); font-size: 15px; }
+
+  /* SETTINGS OVERLAY */
+  .settings-backdrop {
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0);
+    backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
+    pointer-events: none;
+    transition: background 0.35s ease, backdrop-filter 0.35s ease, -webkit-backdrop-filter 0.35s ease;
+  }
+  .settings-backdrop.open {
+    background: rgba(0,0,0,0.35);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    pointer-events: all;
+  }
+  .settings-sheet {
+    position: absolute;
+    bottom: calc(var(--safe-bottom) + 86px);
+    left: 50%; transform: translateX(-50%) translateY(20px);
+    width: calc(100% - 32px); max-width: 420px;
+    background: rgba(248,245,240,0.97);
+    backdrop-filter: blur(28px);
+    -webkit-backdrop-filter: blur(28px);
+    border: 0.5px solid rgba(255,255,255,0.6);
+    border-radius: 28px;
+    padding: 24px 20px 20px;
+    box-shadow: 0 16px 48px rgba(0,0,0,0.25), 0 4px 12px rgba(0,0,0,0.12), inset 0 0.5px 0 rgba(255,255,255,0.8);
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.35s cubic-bezier(0.34,1.3,0.64,1);
+  }
+  .settings-backdrop.open .settings-sheet {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  .settings-handle {
+    width: 36px; height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    margin: 0 auto 20px;
+  }
+  .settings-title {
+    font-size: 18px; font-weight: 700; letter-spacing: -0.3px;
+    color: var(--text); margin-bottom: 20px;
+  }
+  .settings-section-label {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.8px;
+    text-transform: uppercase; color: var(--text3);
+    margin-bottom: 12px;
+  }
+  .theme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .theme-card {
+    border-radius: 16px; padding: 14px 14px 12px;
+    cursor: pointer; border: 2px solid transparent;
+    transition: border-color 0.18s, transform 0.15s;
+    -webkit-user-select: none; user-select: none;
+  }
+  .theme-card:active { transform: scale(0.96); }
+  .theme-card.selected { border-color: var(--accent); }
+  .theme-swatches { display: flex; gap: 5px; margin-bottom: 10px; }
+  .theme-swatch { width: 22px; height: 22px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.08); }
+  .theme-name { font-size: 13px; font-weight: 600; }
+  .theme-desc { font-size: 11px; margin-top: 2px; opacity: 0.6; }
+
+
+  /* ALARM BTN */
+  .alarm-btn {
+    margin-left: auto;
+    width: 34px; height: 34px; border-radius: 50%;
+    background: var(--surface); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; flex-shrink: 0; position: relative;
+  }
+  .alarm-btn svg { width: 18px; height: 18px; color: var(--text); }
+  .alarm-btn.running { border-color: var(--accent); }
+  .alarm-badge {
+    position: absolute; top: -4px; right: -4px;
+    background: var(--accent); color: var(--bg);
+    font-size: 9px; font-weight: 700;
+    border-radius: 10px; padding: 1px 4px; min-width: 16px;
+    text-align: center; display: none;
+  }
+  .alarm-btn.running .alarm-badge { display: block; }
+
+  /* TIMER PICKER */
+  .timer-picker {
+    position: absolute; top: calc(100% + 8px); right: 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 6px;
+    display: none;
+    flex-direction: column; gap: 4px;
+    z-index: 50;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    min-width: 120px;
+  }
+  .timer-picker.open { display: flex; }
+  .timer-opt {
+    background: none; border: none;
+    padding: 10px 16px; border-radius: 10px;
+    font-size: 14px; font-family: inherit; color: var(--text);
+    cursor: pointer; text-align: left;
+    transition: background 0.12s;
+  }
+  .timer-opt:active { background: var(--surface2); }
+
+  /* SAVE MODAL */
+  .save-modal-backdrop {
+    position: fixed; inset: 0; z-index: 300;
+    background: rgba(0,0,0,0);
+    backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
+    pointer-events: none;
+    transition: background 0.3s, backdrop-filter 0.3s, -webkit-backdrop-filter 0.3s;
+  }
+  .save-modal-backdrop.open {
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    pointer-events: all;
+  }
+  .save-modal {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -48%) scale(0.94);
+    width: calc(100% - 48px); max-width: 340px;
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 24px;
+    padding: 32px 24px 24px;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.28s ease, transform 0.32s cubic-bezier(0.34,1.3,0.64,1);
+    box-shadow: 0 16px 48px rgba(0,0,0,0.2);
+  }
+  .save-modal-backdrop.open .save-modal {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  .save-modal-icon {
+    width: 56px; height: 56px; border-radius: 50%;
+    background: var(--accent-dim);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 16px;
+  }
+  .save-modal-icon svg { width: 28px; height: 28px; color: var(--accent); }
+  .save-modal-title { font-size: 20px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+  .save-modal-sub { font-size: 13px; color: var(--text2); margin-bottom: 24px; line-height: 1.5; }
+  .save-modal-stats { display: flex; justify-content: center; gap: 24px; margin-bottom: 24px; }
+  .save-stat { text-align: center; }
+  .save-stat-val { font-size: 22px; font-weight: 700; color: var(--accent); }
+  .save-stat-label { font-size: 11px; color: var(--text3); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .save-modal-btn {
+    width: 100%; padding: 14px;
+    background: var(--accent); border: none; border-radius: 14px;
+    color: var(--bg); font-size: 15px; font-weight: 700;
+    font-family: inherit; cursor: pointer;
+  }
+
+  /* STUDIO THEME */
+  .session-list { display: flex; flex-direction: column; gap: 10px; padding: 20px; }
+  .session-card-studio {
+    border-radius: 16px !important;
+    padding: 0 !important;
+    height: 90px;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid currentColor !important;
+    box-shadow: none;
+  }
+
+  .studio-bottom {
+    padding: 0 18px 16px;
+    display: flex; justify-content: space-between; align-items: flex-end;
+  }
+  .studio-name {
+    font-size: 20px; font-weight: 500; letter-spacing: -0.2px; color: #1a1a1a;
+    line-height: 1; font-family: 'Poppins', sans-serif;
+  }
+  .studio-date {
+    font-size: 11px; color: rgba(0,0,0,0.4);
+    font-weight: 400; letter-spacing: 0.3px;
+    padding-bottom: 1px;
+  }
+
+  /* Studio solid pill */
+  .tabs.solid.studio-bar .tab-pill {
+    background: rgba(0,0,0,0.08);
+    border: 1px solid rgba(0,0,0,0.25);
+    box-shadow: none;
+  }
+  .tabs.solid.studio-bar .tab-btn { color: rgba(0,0,0,0.35); }
+  .tabs.solid.studio-bar .tab-btn.active { color: #1a1a1a; }
+
+  /* FORM THEME */
+  body.theme-form {
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+  }
+  .theme-form .page-header h1,
+  .theme-form .workout-title {
+    font-family: 'Cormorant Garamond', Georgia, serif !important;
+    font-weight: 400 !important;
+    font-size: 26px !important;
+    letter-spacing: 0.02em !important;
+  }
+  .theme-form .page-header .sub,
+  .theme-form .workout-date {
+    font-family: 'Space Grotesk', sans-serif !important;
+    font-size: 9px !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.16em !important;
+    text-transform: uppercase !important;
+    color: var(--text2) !important;
+  }
+  .theme-form .page-header {
+    border-bottom: 2px solid var(--border) !important;
+  }
+  .theme-form .workout-header {
+    border-bottom: 2px solid var(--border) !important;
+  }
+  .theme-form .ex-card {
+    border-radius: 0 !important;
+    border-left: none !important;
+    border-right: none !important;
+    border-top: none !important;
+    border-bottom: 1px solid var(--border) !important;
+  }
+  .theme-form .ex-card-name {
+    font-family: 'Space Grotesk', sans-serif !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.18em !important;
+    text-transform: uppercase !important;
+  }
+  .theme-form .stepper {
+    border-radius: 0 !important;
+  }
+  .theme-form .set-input {
+    border-radius: 0 !important;
+    font-family: 'Space Mono', monospace !important;
+    font-size: 18px !important;
+    font-weight: 700 !important;
+  }
+  .theme-form .stepper-btn {
+    font-family: 'Space Mono', monospace !important;
+    font-size: 20px !important;
+    border-radius: 0 !important;
+  }
+  .theme-form .save-btn {
+    border-radius: 0 !important;
+    font-family: 'Space Grotesk', sans-serif !important;
+    font-size: 10.5px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.22em !important;
+    text-transform: uppercase !important;
+  }
+  .theme-form .add-set-btn {
+    border-radius: 0 !important;
+    font-family: 'Space Grotesk', sans-serif !important;
+    font-size: 9.5px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.18em !important;
+    text-transform: uppercase !important;
+  }
+  .theme-form .wk-card {
+    border-radius: 0 !important;
+    border-left: none !important;
+    border-right: none !important;
+  }
+  .theme-form .wk-card-date {
+    font-family: 'Space Mono', monospace !important;
+    font-size: 11px !important;
+    font-weight: 400 !important;
+    letter-spacing: 0.06em !important;
+  }
+  .theme-form .wk-ex-name {
+    font-family: 'Space Grotesk', sans-serif !important;
+    font-size: 9.5px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.16em !important;
+    text-transform: uppercase !important;
+  }
+  .theme-form .set-list-row {
+    font-family: 'Space Mono', monospace !important;
+  }
+
+
+  .tabs.ocean-bar {
+    background: rgba(44,54,90,0.97) !important;
+    border: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  .tabs.sand-bar {
+    background: #f0e8d8 !important;
+    border: 1px solid #1a1a1a !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  /* Form session cards */
+  .theme-form .session-list { gap: 0 !important; padding: 0 !important; }
+  .theme-form .session-card-form {
+    border-radius: 0 !important;
+    border: none !important;
+    border-bottom: 1px solid var(--border) !important;
+    background: var(--bg) !important;
+    padding: 16px 20px !important;
+    display: flex; justify-content: space-between; align-items: baseline;
+    cursor: pointer;
+  }
+  .theme-form .session-card-form:first-child { border-top: 1px solid var(--border) !important; }
+  .theme-form .form-session-name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px; font-weight: 500; color: var(--text);
+  }
+  .theme-form .form-session-date {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; color: var(--text2); letter-spacing: 0.06em;
+  }
+  /* Form tab bar */
+  .tabs.form-bar {
+    border-radius: 0 !important;
+    background: var(--bg) !important;
+    border: none !important;
+    border-top: 2px solid var(--border) !important;
+    box-shadow: none !important;
+    bottom: 0 !important;
+    left: 0 !important; right: 0 !important;
+    width: 100% !important;
+    transform: none !important;
+    padding: 0 !important;
+    height: calc(52px + var(--safe-bottom)) !important;
+    align-items: flex-start !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  .tabs.form-bar .tab-btn {
+    height: 52px !important;
+    font-family: 'Space Grotesk', sans-serif !important;
+    font-size: 9.5px !important; font-weight: 500 !important;
+    letter-spacing: 0.14em !important; text-transform: uppercase !important;
+    color: var(--text2) !important;
+    border-right: 1px solid var(--border) !important;
+    border-radius: 0 !important;
+    display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: center !important;
+  }
+  .tabs.form-bar .tab-btn:last-child { border-right: none !important; }
+  .tabs.form-bar .tab-btn.active { color: var(--text) !important; background: var(--surface2) !important; font-weight: 600 !important; }
+  .tabs.form-bar .tab-btn svg { display: none !important; }
+  .tabs.form-bar .tab-pill { display: none !important; }
+  /* Form page bottom padding */
+  .theme-form .page { padding-bottom: calc(52px + var(--safe-bottom) + 12px) !important; }
+
+</style>
+</head>
+<body>
+
+<!-- PAGE: LOG -->
+<div class="page active" id="page-log">
+  <!-- Session picker -->
+  <div id="picker-view">
+    <div class="page-header">
+      <h1>Trening</h1>
+      <div class="sub" id="picker-sub">Velg økt</div>
+    </div>
+    <div class="session-grid" id="session-grid"></div>
+  </div>
+
+  <!-- Workout logging -->
+  <div id="workout-view">
+    <div class="workout-header">
+      <div class="workout-header-top">
+        <div class="back-btn" onclick="backToPicker()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"/>
+          </svg>
+        </div>
+        <div>
+          <div class="workout-title" id="workout-title"></div>
+          <div class="workout-date" id="workout-date"></div>
+        </div>
+        <div class="alarm-btn" id="alarm-btn" onclick="toggleTimerPicker(event)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="13" r="7"/><path d="M12 10v3l2 2"/><path d="M5 3L2 6M22 6l-3-3"/>
+          </svg>
+          <div class="alarm-badge" id="alarm-badge">--</div>
+          <div class="timer-picker" id="timer-picker">
+            <button class="timer-opt" onclick="startTimer(120)">2 minutter</button>
+            <button class="timer-opt" onclick="startTimer(180)">3 minutter</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="ex-list" id="ex-list"></div>
+    <div class="notes-wrap">
+      <textarea class="notes-input" id="notes-input" placeholder="Notater (valgfritt)…" rows="2"></textarea>
+    </div>
+    <div class="save-wrap">
+      <button class="save-btn" id="save-btn" onclick="saveWorkout()">Lagre økt</button>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: HISTORY -->
+<div class="page" id="page-hist">
+  <div class="page-header">
+    <h1>Historikk</h1>
+  </div>
+  <div class="hist-tabs" id="hist-tabs"></div>
+  <div class="view-toggle">
+    <button class="vtog active" id="vtog-log" onclick="setView('log')">Øktlogg</button>
+    <button class="vtog" id="vtog-focus" onclick="setView('focus')">Øvelsesfokus</button>
+  </div>
+  <div id="hist-log-view">
+    <div class="hist-body" id="hist-body"></div>
+  </div>
+  <div id="hist-focus-view" style="display:none">
+    <div class="focus-ex-select">
+      <select id="focus-ex-sel" onchange="renderFocus()"></select>
+    </div>
+    <div class="chart-wrap" id="chart-wrap"></div>
+    <div class="focus-sets" id="focus-sets"></div>
+  </div>
+</div>
+
+<!-- SETTINGS OVERLAY -->
+<div class="settings-backdrop" id="settings-backdrop" onclick="closeSettings(event)">
+  <div class="settings-sheet" id="settings-sheet">
+    <div class="settings-handle"></div>
+    <div class="settings-title">Innstillinger</div>
+    <div class="settings-section-label">Utseende</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding:14px 16px;background:var(--surface2);border-radius:14px;border:1px solid var(--border)">
+      <div>
+        <div style="font-size:14px;font-weight:600;color:var(--text)">Liquid Glass</div>
+        <div style="font-size:12px;color:var(--text3);margin-top:2px">Gjennomsiktig meny</div>
+      </div>
+      <div id="glass-toggle" onclick="toggleGlass()" style="width:48px;height:28px;border-radius:14px;cursor:pointer;position:relative;transition:background 0.25s;flex-shrink:0">
+        <div id="glass-knob" style="position:absolute;top:3px;width:22px;height:22px;border-radius:50%;background:white;box-shadow:0 1px 4px rgba(0,0,0,0.25);transition:left 0.25s cubic-bezier(0.34,1.4,0.64,1)"></div>
+      </div>
+    </div>
+    <div class="settings-section-label">Data</div>
+    <button id="manual-sync-btn" onclick="manualSync()" style="width:100%;padding:14px;background:var(--accent);color:var(--bg);border:none;border-radius:14px;font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;margin-bottom:20px;text-align:left;display:flex;justify-content:space-between;align-items:center">
+      <span>Synk til Google Sheets</span>
+      <span id="sync-btn-status" style="font-size:12px;font-weight:400;opacity:0.7"></span>
+    </button>
+    <div class="settings-section-label">Fargetema</div>
+    <div class="theme-grid" id="theme-grid"></div>
+  </div>
+</div>
+
+<!-- TABS -->
+<nav class="tabs" id="tab-nav">
+  <div class="tab-pill" id="tab-pill"></div>
+  <button class="tab-btn active" id="tab-log" onclick="showTab('log')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M6 5v14M10 5v14M14 5v14M18 5v14"/>
+      <circle cx="6" cy="5" r="1.5" fill="currentColor" stroke="none"/>
+      <circle cx="10" cy="5" r="1.5" fill="currentColor" stroke="none"/>
+      <circle cx="14" cy="5" r="1.5" fill="currentColor" stroke="none"/>
+      <circle cx="18" cy="5" r="1.5" fill="currentColor" stroke="none"/>
+    </svg>
+    Logg
+  </button>
+  <button class="tab-btn" id="tab-hist" onclick="showTab('hist')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+    </svg>
+    Historikk
+  </button>
+  <button class="tab-btn" id="tab-settings" onclick="openSettings()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="3"/>
+      <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/>
+    </svg>
+    Innstillinger
+  </button>
+</nav>
+
+<script>
+const SESSIONS = {
+  ukA: {
+    id: 'ukA',
+    label: 'Overkropp A',
+    exercises: [
+      { name: 'Benkpress', sets: 3 },
+      { name: 'Sittende DB skulderpress', sets: 3 },
+      { name: 'Barbell bentover-row', sets: 3 },
+      { name: 'Dumbbell lateral raise', sets: 3 },
+      { name: 'Skull crushers', sets: 3 },
+      { name: 'Dumbbell biceps curl', sets: 3 },
+    ]
+  },
+  ukB: {
+    id: 'ukB',
+    label: 'Overkropp B',
+    exercises: [
+      { name: 'Incline benk', sets: 3 },
+      { name: 'Single arm bent-over row', sets: 3 },
+      { name: 'Stående skulderpress', sets: 3 },
+      { name: 'Bakside flyes', sets: 2 },
+      { name: 'Hammer curls', sets: 3 },
+      { name: 'Tricep extensions', sets: 3 },
+    ]
+  },
+  benA: {
+    id: 'benA',
+    label: 'Ben A',
+    exercises: [
+      { name: 'Squats', sets: 3 },
+      { name: 'Romanian deadlifts', sets: 3 },
+      { name: 'Goblet squats', sets: 3 },
+      { name: 'Walking lunges', sets: 2 },
+      { name: 'Calf raise', sets: 3 },
+    ]
+  },
+  benB: {
+    id: 'benB',
+    label: 'Ben B',
+    exercises: [
+      { name: 'Front squat', sets: 3 },
+      { name: 'Sumo deadlift', sets: 3 },
+      { name: 'Bulgarian split squat', sets: 3 },
+      { name: 'Romanian deadlifts', sets: 3 },
+      { name: 'Hip thrust', sets: 3 },
+    ]
+  }
+};
+
+// ─── THEMES ───────────────────────────────────────────────────────
+const THEMES = {
+  ocean: {
+    name: 'Deep Ocean',
+    desc: 'Cream & navy',
+    swatches: ['#EEE8DF','#C4BCB0','#2C365A'],
+    vars: {
+      '--bg':'#EEE8DF','--surface':'#f7f4f0','--surface2':'#e8e2d9',
+      '--border':'#d4cec6','--accent':'#2C365A','--accent-dim':'rgba(44,54,90,0.1)',
+      '--text':'#2C365A','--text2':'#7a7570','--text3':'#b0aaa3',
+      '--island-bg':'rgba(44,54,90,0.97)','--island-solid':'rgba(44,54,90,0.97)','--header-bg':'rgba(238,232,223,0.92)',
+      '--header-bg2':'rgba(238,232,223,0.95)','--active-text':'#EEE8DF',
+      '--sheet-bg':'rgba(248,245,240,0.97)'
+    }
+  },
+  dark: {
+    name: 'Dark Ocean',
+    desc: 'Mørk & nøytral',
+    swatches: ['#1c1c1e','#2c2c2e','#8eacc8'],
+    vars: {
+      '--bg':'#1c1c1e','--surface':'#242426','--surface2':'#2c2c2e',
+      '--border':'#3a3a3c','--accent':'#8eacc8','--accent-dim':'rgba(142,172,200,0.12)',
+      '--text':'#e5e5ea','--text2':'#8e8e93','--text3':'#48484a',
+      '--island-bg':'rgba(28,28,30,0.97)','--island-solid':'rgba(28,28,30,0.97)','--header-bg':'rgba(28,28,30,0.92)',
+      '--header-bg2':'rgba(28,28,30,0.95)','--active-text':'#1c1c1e',
+      '--sheet-bg':'rgba(36,36,38,0.97)'
+    }
+  },
+  studio: {
+    name: 'Studio',
+    desc: 'Minimalistisk',
+    swatches: ['#f0d0d0','#1a1a1a','#888'],
+    vars: {
+      '--bg':'#f0d0d0','--surface':'#f0d0d0','--surface2':'#e8c8c8',
+      '--border':'#1a1a1a','--accent':'#1a1a1a','--accent-dim':'rgba(26,26,26,0.08)',
+      '--text':'#1a1a1a','--text2':'#444','--text3':'#888',
+      '--island-bg':'rgba(20,20,20,0.97)','--island-solid':'rgba(20,20,20,0.97)','--header-bg':'rgba(240,208,208,0.95)',
+      '--header-bg2':'rgba(240,208,208,0.98)','--active-text':'#f0d0d0',
+      '--sheet-bg':'rgba(240,208,208,0.98)'
+    }
+  },
+  studiodark: {
+    name: 'Studio Natt',
+    desc: 'Mørk & rosa',
+    swatches: ['#111111','#1e1e1e','#f0d0d0'],
+    vars: {
+      '--bg':'#111111','--surface':'#111111','--surface2':'#1e1e1e',
+      '--border':'#f0d0d0','--accent':'#f0d0d0','--accent-dim':'rgba(240,208,208,0.1)',
+      '--text':'#f0d0d0','--text2':'#b08080','--text3':'#6a4a4a',
+      '--island-bg':'rgba(17,17,17,0.97)','--island-solid':'rgba(17,17,17,0.97)','--header-bg':'rgba(17,17,17,0.95)',
+      '--header-bg2':'rgba(17,17,17,0.98)','--active-text':'#111111',
+      '--sheet-bg':'rgba(17,17,17,0.98)'
+    }
+  },
+  sand: {
+    name: 'Sand',
+    desc: 'Lys beige',
+    swatches: ['#f0e8d8','#1a1a1a','#888'],
+    vars: {
+      '--bg':'#f0e8d8','--surface':'#f0e8d8','--surface2':'#e6dcc8',
+      '--border':'#1a1a1a','--accent':'#1a1a1a','--accent-dim':'rgba(26,26,26,0.08)',
+      '--text':'#1a1a1a','--text2':'#444','--text3':'#888',
+      '--island-bg':'rgba(20,20,20,0.97)','--island-solid':'rgba(20,20,20,0.97)','--header-bg':'rgba(240,232,216,0.95)',
+      '--header-bg2':'rgba(240,232,216,0.98)','--active-text':'#f0e8d8',
+      '--sheet-bg':'rgba(240,232,216,0.98)'
+    }
+  },
+  form: {
+    name: 'Form',
+    desc: 'Editorial & serif',
+    swatches: ['#ede8e0','#d4cfc7','#1a1714'],
+    vars: {
+      '--bg':'#ede8e0','--surface':'#ede8e0','--surface2':'#e0dbd2',
+      '--border':'#1a1714','--accent':'#1a1714','--accent-dim':'rgba(26,23,20,0.07)',
+      '--text':'#1a1714','--text2':'#6b6560','--text3':'#a09890',
+      '--island-bg':'rgba(26,23,20,0.97)','--island-solid':'rgba(26,23,20,0.97)','--header-bg':'rgba(237,232,224,0.97)',
+      '--header-bg2':'rgba(237,232,224,0.99)','--active-text':'#ede8e0',
+      '--sheet-bg':'rgba(237,232,224,0.99)'
+    }
+  }
+};
+
+let currentTheme = localStorage.getItem('wt_theme') || 'ocean';
+
+const STUDIO_COLORS = {
+  ukA:  { bg: '#f0d0d0', text: '#1a1a1a' },
+  ukB:  { bg: '#f0d0d0', text: '#1a1a1a' },
+  benA: { bg: '#f0d0d0', text: '#1a1a1a' },
+  benB: { bg: '#f0d0d0', text: '#1a1a1a' },
+};
+const OCEAN_STUDIO_COLORS = {
+  ukA:  { bg: '#EEE8DF', text: '#2C365A' },
+  ukB:  { bg: '#EEE8DF', text: '#2C365A' },
+  benA: { bg: '#EEE8DF', text: '#2C365A' },
+  benB: { bg: '#EEE8DF', text: '#2C365A' },
+};
+const SAND_COLORS = {
+  ukA:  { bg: '#f0e8d8', text: '#1a1a1a' },
+  ukB:  { bg: '#f0e8d8', text: '#1a1a1a' },
+  benA: { bg: '#f0e8d8', text: '#1a1a1a' },
+  benB: { bg: '#f0e8d8', text: '#1a1a1a' },
+};
+const STUDIO_DARK_COLORS = {
+  ukA:  { bg: '#111111', text: '#f0d0d0' },
+  ukB:  { bg: '#111111', text: '#f0d0d0' },
+  benA: { bg: '#111111', text: '#f0d0d0' },
+  benB: { bg: '#111111', text: '#f0d0d0' },
+};
+
+const STORAGE_KEY = 'wt_v3';
+const SEED_DATA = [];
+const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxe7KxNUFwrO5PEQUq7VpFheLsLp0zTsIz3xvzjl8UXcVH0cgbN8z720YAm1ExOeeZrEA/exec';
+let workouts = (() => {
+  const stored = localStorage.getItem(STORAGE_KEY);
+  if (stored) return JSON.parse(stored);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(SEED_DATA));
+  return SEED_DATA;
+})();
+let currentSession = null;
+let currentSets = {};
+let activeHistSession = 'ukA';
+let activeView = 'log';
+let syncedIds = new Set(JSON.parse(localStorage.getItem('wt_synced') || '[]'));
+
+// ─── TABS ─────────────────────────────────────────────────────────
+function showTab(tab) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => { b.classList.remove('active'); b.classList.remove('pop'); });
+  document.getElementById('page-' + tab).classList.add('active');
+  const btn = document.getElementById('tab-' + tab);
+  btn.classList.add('active');
+  void btn.offsetWidth;
+  btn.classList.add('pop');
+  btn.addEventListener('animationend', () => btn.classList.remove('pop'), { once: true });
+  movePill(btn);
+  if (tab === 'hist') renderHistTabs();
+}
+
+function movePill(btn) {
+  const pill = document.getElementById('tab-pill');
+  const nav = document.getElementById('tab-nav');
+  if (!pill || !nav) return;
+  const navRect = nav.getBoundingClientRect();
+  const btnRect = btn.getBoundingClientRect();
+  pill.style.left = (btnRect.left - navRect.left) + 'px';
+  pill.style.width = btnRect.width + 'px';
+}
+
+function initPill() {
+  const active = document.querySelector('.tab-btn.active');
+  if (active) {
+    const pill = document.getElementById('tab-pill');
+    if (pill) pill.style.transition = 'none';
+    movePill(active);
+    setTimeout(() => {
+      if (pill) pill.style.transition = '';
+    }, 50);
+  }
+}
+
+// ─── PICKER ───────────────────────────────────────────────────────
+function renderSessionPicker() {
+  const grid = document.getElementById('session-grid');
+  const _theme = typeof currentTheme !== 'undefined' ? currentTheme : (localStorage.getItem('wt_theme') || 'ocean');
+  const isStudio = _theme === 'studio' || _theme === 'studiodark' || _theme === 'sand' || _theme === 'ocean';
+  const _isDark = _theme === 'studiodark';
+  grid.className = isStudio ? 'session-list' : 'session-grid';
+  grid.innerHTML = Object.values(SESSIONS).map(s => {
+    const last = workouts.find(w => w.sessionId === s.id);
+    const lastStr = last
+      ? new Date(last.date).toLocaleDateString('nb-NO', { day: 'numeric', month: 'short' })
+      : 'Aldri logget';
+    if (isStudio) {
+      const col = _isDark ? STUDIO_DARK_COLORS[s.id] :
+        _theme === 'sand' ? SAND_COLORS[s.id] :
+        _theme === 'ocean' ? OCEAN_STUDIO_COLORS[s.id] :
+        STUDIO_COLORS[s.id];
+      const _borderCol = _isDark ? '#f0d0d0' : _theme === 'ocean' ? '#2C365A' : '#1a1a1a';
+      return `<div class="session-card session-card-studio" style="background:${col.bg};border-color:${_borderCol};color:${_borderCol}" onclick="startSession('${s.id}')">
+        <div class="studio-bottom">
+          <div class="studio-name" style="color:${col.text}">${s.label}</div>
+          <div class="studio-date" style="color:${_isDark ? 'rgba(240,208,208,0.45)' : 'rgba(0,0,0,0.4)'}">${lastStr}</div>
+        </div>
+      </div>`;
+    }
+    if (_theme === 'form') {
+      return `<div class="session-card-form" onclick="startSession('${s.id}')">
+        <div class="form-session-name">${s.label}</div>
+        <div class="form-session-date">${lastStr}</div>
+      </div>`;
+    }
+    return `<div class="session-card" onclick="startSession('${s.id}')">
+      <div class="s-label">${s.label}</div>
+      <div class="s-last">Sist: ${lastStr}</div>
+    </div>`;
+  }).join('');
+}
+
+function startSession(sid) {
+  currentSession = SESSIONS[sid];
+  currentSets = {};
+  // Last workout for placeholder display
+  const last = workouts.find(w => w.sessionId === sid);
+  window.lastSets = {};
+  currentSession.exercises.forEach((ex, ei) => {
+    const lastEx = last?.exercises.find(e => e.name === ex.name);
+    // Empty inputs — user types fresh
+    currentSets[ei] = Array.from({ length: ex.sets }, () => ({ weight: '', reps: '' }));
+    // Store last session values for placeholders
+    lastSets[ei] = Array.from({ length: ex.sets }, (_, si) => ({
+      weight: lastEx?.sets[si]?.weight || '',
+      reps: lastEx?.sets[si]?.reps || ''
+    }));
+  });
+
+  document.getElementById('workout-title').textContent = currentSession.label;
+  document.getElementById('workout-date').textContent = new Date().toLocaleDateString('nb-NO', { weekday: 'long', day: 'numeric', month: 'long' });
+  document.getElementById('notes-input').value = '';
+  document.getElementById('save-btn').textContent = 'Lagre økt';
+  document.getElementById('save-btn').style.background = '';
+
+  document.getElementById('picker-view').style.display = 'none';
+  document.getElementById('workout-view').classList.add('active');
+  renderExercises();
+}
+
+function backToPicker() {
+  document.getElementById('workout-view').classList.remove('active');
+  document.getElementById('picker-view').style.display = '';
+  renderSessionPicker();
+}
+
+// ─── EXERCISES ────────────────────────────────────────────────────
+function syncDomToState() {
+  document.querySelectorAll('.ex-card').forEach((card, ei) => {
+    card.querySelectorAll('.set-row').forEach((row, si) => {
+      if (!currentSets[ei] || !currentSets[ei][si]) return;
+      const inputs = row.querySelectorAll('.set-input');
+      if (inputs[0]) currentSets[ei][si].weight = inputs[0].value;
+      if (inputs[1]) currentSets[ei][si].reps = inputs[1].value;
+    });
+  });
+}
+
+function renderExercises() {
+  const container = document.getElementById('ex-list');
+  container.innerHTML = currentSession.exercises.map((ex, ei) => {
+    const setsHtml = currentSets[ei].map((s, si) => {
+      const prev = lastSets[ei] && lastSets[ei][si];
+      const ph_w = prev && prev.weight ? parseFloat(prev.weight).toFixed(1) : '';
+      const ph_r = prev && prev.reps ? prev.reps : '';
+      return `<div class="set-row">
+        <div class="set-num">${si + 1}</div>
+        <div class="stepper">
+          <button class="stepper-btn" onclick="stepVal(${ei},${si},'weight',-0.5)">−</button>
+          <input class="set-input" type="number" inputmode="decimal" value="${s.weight !== '' ? parseFloat(s.weight).toFixed(1) : ''}"
+            placeholder="${ph_w}" min="0" step="0.5"
+            oninput="updateSet(${ei},${si},'weight',this.value)" />
+          <button class="stepper-btn" onclick="stepVal(${ei},${si},'weight',0.5)">+</button>
+        </div>
+        <div class="stepper">
+          <button class="stepper-btn" onclick="stepVal(${ei},${si},'reps',-1)">−</button>
+          <input class="set-input" type="number" inputmode="numeric" value="${s.reps}"
+            placeholder="${ph_r}" min="1" max="100"
+            oninput="updateSet(${ei},${si},'reps',this.value)" />
+          <button class="stepper-btn" onclick="stepVal(${ei},${si},'reps',1)">+</button>
+        </div>
+        <button class="set-del" onclick="removeSet(${ei},${si})">×</button>
+      </div>`;
+    }).join('');
+
+    return `<div class="ex-card">
+      <div class="ex-card-head">
+        <div class="ex-card-name">${ex.name}</div>
+      </div>
+      <div class="sets-header">
+        <span>Sett</span><span style='text-align:center'>kg</span><span style='text-align:center'>Reps</span><span></span>
+      </div>
+      ${setsHtml}
+      <button class="add-set-btn" onclick="addSet(${ei})">+ Legg til sett</button>
+    </div>`;
+  }).join('');
+}
+
+function updateSet(ei, si, field, value) {
+  if (currentSets[ei] && currentSets[ei][si]) {
+    currentSets[ei][si][field] = value;
+  }
+}
+
+function stepVal(ei, si, field, delta) {
+  const set = currentSets[ei] && currentSets[ei][si];
+  if (!set) return;
+  const prev = lastSets[ei] && lastSets[ei][si];
+  let cur = parseFloat(set[field]);
+  if (isNaN(cur) || cur === 0) {
+    const fallback = prev && prev[field] ? parseFloat(prev[field]) : 0;
+    cur = fallback;
+  }
+  const step = field === 'weight' ? 0.5 : 1;
+  const d = delta > 0 ? step : -step;
+  let next = Math.max(0, Math.round((cur + d) * 100) / 100);
+  if (field === 'weight') next = parseFloat(next.toFixed(1));
+  set[field] = next;
+  // Update input directly — no re-render
+  const inputs = document.querySelectorAll(`.ex-card:nth-child(${ei + 1}) .set-row:nth-child(${si + 1}) .set-input`);
+  const idx = field === 'weight' ? 0 : 1;
+  if (inputs[idx]) {
+    inputs[idx].value = next || '';
+  } else {
+    renderExercises();
+  }
+}
+
+function addSet(ei) {
+  syncDomToState();
+  currentSets[ei].push({ weight: '', reps: '' });
+  renderExercises();
+}
+
+function removeSet(ei, si) {
+  if (currentSets[ei].length > 1) {
+    syncDomToState();
+    currentSets[ei].splice(si, 1);
+    renderExercises();
+  }
+}
+
+// ─── SAVE ─────────────────────────────────────────────────────────
+function saveWorkout() {
+  syncDomToState();
+  const exercises = currentSession.exercises.map((ex, ei) => ({
+    name: ex.name,
+    sets: currentSets[ei]
+      .map((s, si) => ({ num: si + 1, weight: parseFloat(s.weight) || 0, reps: parseInt(s.reps) || 0 }))
+  }));
+  if (!exercises.some(e => e.sets.some(s => s.reps > 0))) {
+    alert('Logg minst ett sett med reps!');
+    return;
+  }
+  const workout = {
+    id: Date.now(),
+    date: new Date().toISOString(),
+    sessionId: currentSession.id,
+    sessionLabel: currentSession.label,
+    exercises,
+    notes: document.getElementById('notes-input').value
+  };
+  workouts.unshift(workout);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(workouts));
+  pushToSheets(workout);
+
+  // Build modal stats
+  const totalSets = exercises.reduce((a, e) => a + e.sets.filter(s => s.reps > 0).length, 0);
+  const totalReps = exercises.reduce((a, e) => a + e.sets.reduce((b, s) => b + (s.reps || 0), 0), 0);
+  const topLifts = exercises.map(e => {
+    const max = Math.max(...e.sets.map(s => s.weight || 0));
+    return max > 0 ? `${e.name}: ${parseFloat(max).toFixed(1)} kg` : null;
+  }).filter(Boolean).slice(0, 3).join(' · ');
+
+  document.getElementById('save-modal-sub').textContent = topLifts || currentSession.label;
+  document.getElementById('save-modal-stats').innerHTML = `
+    <div class="save-stat"><div class="save-stat-val">${exercises.length}</div><div class="save-stat-label">Øvelser</div></div>
+    <div class="save-stat"><div class="save-stat-val">${totalSets}</div><div class="save-stat-label">Sett</div></div>
+    <div class="save-stat"><div class="save-stat-val">${totalReps}</div><div class="save-stat-label">Reps</div></div>
+  `;
+  document.getElementById('save-modal-backdrop').classList.add('open');
+}
+
+function closeSaveModal() {
+  document.getElementById('save-modal-backdrop').classList.remove('open');
+  backToPicker();
+  syncFromSheets();
+}
+
+// ─── HISTORY ──────────────────────────────────────────────────────
+function renderHistTabs() {
+  document.getElementById('hist-tabs').innerHTML = Object.values(SESSIONS).map(s =>
+    `<button class="hist-tab ${s.id === activeHistSession ? 'active' : ''}" onclick="switchHistSession('${s.id}')">${s.label}</button>`
+  ).join('');
+  if (activeView === 'log') renderHistLog();
+  else renderHistFocus();
+}
+
+function switchHistSession(sid) {
+  activeHistSession = sid;
+  renderHistTabs();
+}
+
+function setView(v) {
+  activeView = v;
+  document.getElementById('vtog-log').classList.toggle('active', v === 'log');
+  document.getElementById('vtog-focus').classList.toggle('active', v === 'focus');
+  document.getElementById('hist-log-view').style.display = v === 'log' ? '' : 'none';
+  document.getElementById('hist-focus-view').style.display = v === 'focus' ? '' : 'none';
+  if (v === 'log') renderHistLog();
+  else renderHistFocus();
+}
+
+function renderHistLog() {
+  const sw = workouts.filter(w => w.sessionId === activeHistSession);
+  const body = document.getElementById('hist-body');
+  if (!sw.length) {
+    body.innerHTML = '<div class="empty">Ingen økter logget ennå</div>';
+    return;
+  }
+  body.innerHTML = sw.map(w => {
+    const d = new Date(w.date).toLocaleDateString('nb-NO', { weekday: 'short', day: 'numeric', month: 'short' });
+    const exHtml = w.exercises.map(ex => {
+      const rows = ex.sets
+        .filter(s => s.reps > 0)
+        .map(s => `<div class="set-list-row"><span class="set-reps">${s.reps}</span><span class="set-x">×</span><span class="set-kg">${s.weight ? parseFloat(s.weight).toFixed(1) + ' kg' : '—'}</span></div>`)
+        .join('');
+      return `<div class="wk-ex">
+        <div class="wk-ex-name">${ex.name}</div>
+        <div class="set-list">${rows}</div>
+      </div>`;
+    }).join('');
+    const notesHtml = w.notes ? `<div class="wk-notes">${w.notes}</div>` : '';
+    return `<div class="wk-card">
+      <div class="wk-card-head">
+        <span class="wk-card-date">${d}</span>
+        <button class="wk-card-del" onclick="deleteWorkout(${w.id})">🗑</button>
+      </div>
+      ${exHtml}
+      ${notesHtml}
+    </div>`;
+  }).join('');
+}
+
+function deleteWorkout(id) {
+  if (!confirm('Slett denne økten?')) return;
+  workouts = workouts.filter(w => w.id !== id);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(workouts));
+  renderHistLog();
+}
+
+function renderHistFocus() {
+  const s = SESSIONS[activeHistSession];
+  const sel = document.getElementById('focus-ex-sel');
+  const prevVal = sel.value;
+  sel.innerHTML = s.exercises.map(ex =>
+    `<option value="${ex.name}" ${prevVal === ex.name ? 'selected' : ''}>${ex.name}</option>`
+  ).join('');
+  renderFocus();
+}
+
+function renderFocus() {
+  const exName = document.getElementById('focus-ex-sel').value;
+  const sw = workouts.filter(w => w.sessionId === activeHistSession).slice().reverse();
+  const points = sw.map(w => {
+    const ex = w.exercises.find(e => e.name === exName);
+    const topW = ex ? Math.max(...ex.sets.map(s => s.weight || 0)) : 0;
+    return { date: w.date, weight: topW };
+  }).filter(p => p.weight > 0);
+
+  const chartWrap = document.getElementById('chart-wrap');
+  const focusSets = document.getElementById('focus-sets');
+
+  if (!points.length) {
+    chartWrap.innerHTML = '';
+    focusSets.innerHTML = '<div class="empty">Ingen data</div>';
+    return;
+  }
+
+  // Get accent color from CSS variable (theme-aware)
+  const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+
+  // SVG chart with Y-axis
+  const W = 320, H = 140, PAD_L = 44, PAD_R = 12, PAD_T = 16, PAD_B = 28;
+  const chartW = W - PAD_L - PAD_R;
+  const chartH = H - PAD_T - PAD_B;
+  const weights = points.map(p => p.weight);
+  const minW = Math.min(...weights), maxW = Math.max(...weights);
+  const rawRange = maxW - minW || 10;
+  // Nice y-axis ticks
+  const tickStep = rawRange <= 5 ? 1 : rawRange <= 15 ? 2.5 : rawRange <= 30 ? 5 : 10;
+  const yMin = Math.floor(minW / tickStep) * tickStep;
+  const yMax = Math.ceil(maxW / tickStep) * tickStep;
+  const yRange = yMax - yMin || tickStep;
+  const toY = v => PAD_T + (1 - (v - yMin) / yRange) * chartH;
+  const xs = points.map((_, i) => PAD_L + (i / Math.max(points.length - 1, 1)) * chartW);
+  const ys = points.map(p => toY(p.weight));
+
+  // Y-axis ticks
+  const ticks = [];
+  for (let t = yMin; t <= yMax + 0.001; t += tickStep) ticks.push(t);
+  const yAxisLines = ticks.map(t => {
+    const y = toY(t);
+    return `<line x1="${PAD_L}" y1="${y}" x2="${W - PAD_R}" y2="${y}" stroke="${accentColor}" stroke-opacity="0.1" stroke-width="1"/>
+            <text x="${PAD_L - 5}" y="${y + 4}" text-anchor="end" font-size="9" fill="${accentColor}" opacity="0.5">${t % 1 === 0 ? t : t.toFixed(1)}</text>`;
+  }).join('');
+
+  const polyline = xs.map((x, i) => `${x},${ys[i]}`).join(' ');
+  const area = `${xs[0]},${H - PAD_B} ` + xs.map((x, i) => `${x},${ys[i]}`).join(' ') + ` ${xs[xs.length-1]},${H - PAD_B}`;
+  const dots = xs.map((x, i) => `<circle cx="${x}" cy="${ys[i]}" r="3.5" fill="${accentColor}"/>`).join('');
+
+  // X-axis date labels
+  const maxLabels = 5;
+  const step = Math.max(1, Math.ceil(points.length / maxLabels));
+  const xLabels = points.map((p, i) => {
+    if (i % step !== 0 && i !== points.length - 1) return '';
+    const d = new Date(p.date);
+    const day = d.getDate();
+    const mon = d.toLocaleDateString('nb-NO', { month: 'short' }).replace('.','');
+    return `<text x="${xs[i]}" y="${H - 6}" text-anchor="middle" font-size="9" fill="${accentColor}" opacity="0.45">${day}. ${mon}</text>`;
+  }).join('');
+
+  chartWrap.innerHTML = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="overflow:visible">
+    <defs>
+      <linearGradient id="ag" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="${accentColor}" stop-opacity="0.18"/>
+        <stop offset="100%" stop-color="${accentColor}" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+    ${yAxisLines}
+    <polygon points="${area}" fill="url(#ag)"/>
+    <polyline points="${polyline}" fill="none" stroke="${accentColor}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+    ${dots}
+    ${xLabels}
+  </svg>`;
+
+  // Set history list
+  const recent = sw.slice().reverse().slice(0, 10);
+  focusSets.innerHTML = recent.map(w => {
+    const ex = w.exercises.find(e => e.name === exName);
+    if (!ex) return '';
+    const d = new Date(w.date);
+    const dateStr = d.getDate() + '. ' + d.toLocaleDateString('nb-NO', { month: 'short' }).replace('.','') + ' ' + d.getFullYear();
+    const setRows = ex.sets.filter(s => s.reps > 0)
+      .map(s => `<div class="set-list-row"><span class="set-reps">${s.reps}</span><span class="set-x">×</span><span class="set-kg">${s.weight ? parseFloat(s.weight).toFixed(1) + ' kg' : '—'}</span></div>`)
+      .join('');
+    return `<div class="focus-set-row">
+      <span class="focus-set-date">${dateStr}</span>
+      <div class="set-list" style="text-align:right">${setRows}</div>
+    </div>`;
+  }).filter(Boolean).join('');
+}
+
+
+
+
+// ─── MANUAL SYNC ──────────────────────────────────────────────────
+async function manualSync() {
+  const btn = document.getElementById('manual-sync-btn');
+  const status = document.getElementById('sync-btn-status');
+  const unsynced = workouts.filter(w => !syncedIds.has(w.id));
+
+  if (unsynced.length === 0) {
+    status.textContent = 'Alt er synkronisert ✓';
+    return;
+  }
+
+  btn.style.opacity = '0.6';
+  btn.style.pointerEvents = 'none';
+  status.textContent = `Sender ${unsynced.length} økt${unsynced.length > 1 ? 'er' : ''}…`;
+
+  let ok = 0;
+  for (const workout of unsynced) {
+    const rows = [];
+    workout.exercises.forEach(ex => {
+      ex.sets.forEach(s => {
+        if (s.reps > 0) rows.push({
+          date: workout.date,
+          session: workout.sessionLabel,
+          exercise: ex.name,
+          set: s.num,
+          weight: s.weight,
+          reps: s.reps
+        });
+      });
+    });
+    try {
+      const res = await fetch(SHEETS_URL, { method: 'POST', body: JSON.stringify(rows) });
+      if (res.ok) {
+        syncedIds.add(workout.id);
+        ok++;
+      }
+    } catch(e) {}
+    await new Promise(r => setTimeout(r, 500));
+  }
+
+  localStorage.setItem('wt_synced', JSON.stringify([...syncedIds]));
+  btn.style.opacity = '';
+  btn.style.pointerEvents = '';
+
+  if (ok === unsynced.length) {
+    status.textContent = `${ok} økt${ok > 1 ? 'er' : ''} synkronisert ✓`;
+  } else {
+    status.textContent = `${ok}/${unsynced.length} sendt — sjekk nett`;
+  }
+}
+
+function updateSyncBtnStatus() {
+  const status = document.getElementById('sync-btn-status');
+  if (!status) return;
+  const unsynced = workouts.filter(w => !syncedIds.has(w.id)).length;
+  status.textContent = unsynced > 0 ? `${unsynced} venter` : 'Alt synkronisert ✓';
+}
+
+// ─── LIQUID GLASS TOGGLE ──────────────────────────────────────────
+let glassMode = localStorage.getItem('wt_glass') !== 'false';
+
+function applyGlassMode(animated) {
+  const tabs = document.querySelector('.tabs');
+  const toggle = document.getElementById('glass-toggle');
+  const knob = document.getElementById('glass-knob');
+  if (!tabs) return;
+  if (glassMode) {
+    tabs.classList.remove('solid');
+    tabs.classList.remove(...[...tabs.classList].filter(c => c.startsWith('bar-')));
+    tabs.classList.add('glass');
+    if (toggle) toggle.style.background = 'var(--accent)';
+    if (knob) knob.style.left = '23px';
+  } else {
+    tabs.classList.remove('glass');
+    tabs.classList.add('solid');
+    tabs.classList.remove(...[...tabs.classList].filter(c => c.startsWith('bar-')));
+    tabs.classList.add('bar-' + (typeof currentTheme !== 'undefined' ? currentTheme : localStorage.getItem('wt_theme') || 'ocean'));
+    if (toggle) toggle.style.background = 'var(--border)';
+    if (knob) knob.style.left = '3px';
+  }
+  tabs.style.background = '';
+}
+
+function toggleGlass() {
+  glassMode = !glassMode;
+  localStorage.setItem('wt_glass', glassMode);
+  applyGlassMode(true);
+}
+
+// ─── TIMER ────────────────────────────────────────────────────────
+let timerInterval = null;
+let timerRemaining = 0;
+
+function toggleTimerPicker(e) {
+  e.stopPropagation();
+  const picker = document.getElementById('timer-picker');
+  picker.classList.toggle('open');
+  document.addEventListener('click', () => picker.classList.remove('open'), { once: true });
+}
+
+function startTimer(seconds) {
+  document.getElementById('timer-picker').classList.remove('open');
+  if (timerInterval) clearInterval(timerInterval);
+  timerRemaining = seconds;
+  const btn = document.getElementById('alarm-btn');
+  btn.classList.add('running');
+  updateBadge();
+  timerInterval = setInterval(() => {
+    timerRemaining--;
+    if (timerRemaining <= 0) {
+      clearInterval(timerInterval);
+      timerInterval = null;
+      btn.classList.remove('running');
+      document.getElementById('alarm-badge').style.display = 'none';
+      if ('vibrate' in navigator) navigator.vibrate([200, 100, 200]);
+      // Flash header
+      btn.style.background = 'var(--accent)';
+      setTimeout(() => btn.style.background = '', 800);
+    } else {
+      updateBadge();
+    }
+  }, 1000);
+}
+
+function updateBadge() {
+  const m = Math.floor(timerRemaining / 60);
+  const s = timerRemaining % 60;
+  document.getElementById('alarm-badge').textContent = m + ':' + String(s).padStart(2, '0');
+}
+
+
+// ─── GOOGLE SHEETS SYNC ───────────────────────────────────────────
+function pushToSheets(workout) {
+  const rows = [];
+  workout.exercises.forEach(ex => {
+    ex.sets.forEach(s => {
+      rows.push({
+        date: workout.date,
+        session: workout.sessionLabel,
+        exercise: ex.name,
+        set: s.num,
+        weight: s.weight,
+        reps: s.reps
+      });
+    });
+  });
+  if (!navigator.onLine) {
+    showSyncStatus('Offline — lagret lokalt', true);
+    return;
+  }
+  fetch(SHEETS_URL, {
+    method: 'POST',
+    body: JSON.stringify(rows)
+  }).then(() => {
+    syncedIds.add(workout.id);
+    localStorage.setItem('wt_synced', JSON.stringify([...syncedIds]));
+    showSyncStatus('✓ Lagret til Google Sheets');
+  }).catch(() => {
+    showSyncStatus('Offline — lagret lokalt', true);
+  });
+}
+
+async function syncFromSheets() {
+  const sub = document.getElementById('picker-sub');
+  if (sub) sub.textContent = 'Henter data…';
+  try {
+    // Use Google Sheets CSV export — no CORS issues
+    const res = await fetch(SHEETS_URL);
+    if (!res.ok) throw new Error('fetch failed');
+    const data = await res.json();
+    if (!Array.isArray(data) || !data.length) { if (sub) sub.textContent = 'Velg økt'; return; }
+
+    const wMap = {};
+    data.forEach(w => {
+      const dateKey = (w.date || '').substring(0, 10);
+      const key = w.session + '|' + dateKey;
+      if (!wMap[key]) wMap[key] = {
+        id: Math.abs(hashStr(key)),
+        date: w.date,
+        sessionId: Object.values(SESSIONS).find(s => s.label === w.session)?.id || w.session,
+        sessionLabel: w.session,
+        exercises: w.exercises,
+        notes: ''
+      };
+    });
+
+    const sheetsWorkouts = Object.values(wMap).map(w => {
+      const d = new Date(w.date);
+      return { ...w, date: isNaN(d) ? w.date : d.toISOString() };
+    }).sort((a,b) => b.date.localeCompare(a.date));
+
+    workouts = sheetsWorkouts;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(workouts));
+    sheetsWorkouts.forEach(w => syncedIds.add(w.id));
+    localStorage.setItem('wt_synced', JSON.stringify([...syncedIds]));
+    if (sub) sub.textContent = 'Velg økt';
+    renderSessionPicker();
+  } catch(e) {
+    console.error('Sync error:', e);
+    if (sub) sub.textContent = 'Velg økt';
+  }
+}
+
+function hashStr(s) {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) h = Math.imul(31, h) + s.charCodeAt(i) | 0;
+  return h;
+}
+
+function showSyncStatus(msg, isError = false) {
+  let el = document.getElementById('sync-status');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'sync-status';
+    el.style.cssText = 'position:fixed;top:60px;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:6px 16px;font-size:12px;color:var(--text2);z-index:500;transition:opacity 0.4s;white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,0.1)';
+    document.body.appendChild(el);
+  }
+  el.textContent = msg;
+  el.style.color = isError ? 'var(--text3)' : 'var(--accent)';
+  el.style.opacity = '1';
+  setTimeout(() => { el.style.opacity = '0'; }, 2500);
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────
+renderSessionPicker();
+syncFromSheets();
+setTimeout(() => { initPill(); applyGlassMode(false); document.body.classList.toggle('theme-form', currentTheme === 'form'); if (currentTheme === 'form') { document.querySelector('.tabs').classList.add('form-bar'); } }, 100);
+
+
+
+function applyTheme(id) {
+  const t = THEMES[id];
+  if (!t) return;
+  const root = document.documentElement.style;
+  for (const [k, v] of Object.entries(t.vars)) root.setProperty(k, v);
+  // apply dynamic vars
+  const tabs = document.querySelector('.tabs');
+  if (id === 'studio') {
+    // Force solid mode for Studio
+    glassMode = false;
+    localStorage.setItem('wt_glass', 'false');
+    tabs.classList.remove('glass');
+    tabs.classList.add('solid');
+    glassMode = false;
+    localStorage.setItem('wt_glass', 'false');
+    tabs.classList.remove('glass');
+    tabs.classList.add('solid');
+    // Remove all old bar classes
+    tabs.className = [...tabs.classList].filter(c => !c.startsWith('bar-') && !['studio-bar','studio-dark-bar','sand-bar','ocean-bar'].includes(c)).join(' ');
+    tabs.classList.add('bar-' + id);
+    tabs.style.padding = '4px 5px';
+  } else {
+    tabs.className = [...tabs.classList].filter(c => !c.startsWith('bar-') && !['studio-bar','studio-dark-bar','sand-bar','ocean-bar','form-bar'].includes(c)).join(' ');
+    document.body.classList.remove('theme-form');
+    tabs.style.background = '';
+    tabs.style.border = '';
+    tabs.style.boxShadow = '';
+    tabs.style.padding = '';
+    document.querySelectorAll('.tab-btn').forEach(b => b.style.color = '');
+    applyGlassMode(false);
+  }
+  document.querySelectorAll('.page-header, .workout-header').forEach(el => {
+    el.style.background = t.vars['--header-bg'];
+    if (id === 'studio') {
+      el.style.borderBottom = '1px solid #1a1a1a';
+    } else {
+      el.style.borderBottom = '';
+    }
+  });
+  // Body class for form theme
+  document.body.classList.toggle('theme-form', id === 'form');
+  // Form bar
+  const tabsEl = document.querySelector('.tabs');
+  if (id === 'form') {
+    tabsEl.classList.remove('studio-bar','studio-dark-bar');
+    tabsEl.classList.add('form-bar');
+    tabsEl.style.padding = '';
+  } else {
+    tabsEl.classList.remove('form-bar');
+  }
+  currentTheme = id;
+  localStorage.setItem('wt_theme', id);
+  renderThemeGrid();
+  renderSessionPicker();
+}
+
+function renderThemeGrid() {
+  const grid = document.getElementById('theme-grid');
+  if (!grid) return;
+  grid.innerHTML = Object.entries(THEMES).map(([id, t]) => {
+    const swatches = t.swatches.map(c =>
+      `<div class="theme-swatch" style="background:${c}"></div>`
+    ).join('');
+    const sel = id === currentTheme ? ' selected' : '';
+    const borderCol = id === currentTheme ? t.vars['--accent'] : 'transparent';
+    return `<div class="theme-card${sel}" style="background:#f7f4f0;border-color:${borderCol}" onclick="applyTheme('${id}')">
+      <div class="theme-swatches">${swatches}</div>
+      <div class="theme-name" style="color:#2C365A">${t.name}</div>
+      <div class="theme-desc" style="color:#7a7570">${t.desc}</div>
+    </div>`;
+  }).join('');
+}
+
+function openSettings() {
+  const bd = document.getElementById('settings-backdrop');
+  renderThemeGrid();
+  applyGlassMode(false);
+  updateSyncBtnStatus();
+  bd.classList.add('open');
+  // deactivate all tab buttons visually
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-settings').classList.add('active');
+  movePill(document.getElementById('tab-settings'));
+}
+
+function closeSettings(e) {
+  if (e.target === document.getElementById('settings-backdrop')) {
+    document.getElementById('settings-backdrop').classList.remove('open');
+    document.getElementById('tab-settings').classList.remove('active');
+    // restore active tab
+    const activePage = document.querySelector('.page.active');
+    if (activePage) {
+      const id = activePage.id.replace('page-','');
+      const btn = document.getElementById('tab-' + id);
+      if (btn) btn.classList.add('active');
+    }
+  }
+}
+
+// Init theme
+applyTheme(currentTheme);
+
+</script>
+
+<!-- SAVE MODAL -->
+<div class="save-modal-backdrop" id="save-modal-backdrop">
+  <div class="save-modal">
+    <div class="save-modal-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+    </div>
+    <div class="save-modal-title">Good boy!</div>
+    <div class="save-modal-sub" id="save-modal-sub"></div>
+    <div class="save-modal-stats" id="save-modal-stats"></div>
+    <button class="save-modal-btn" onclick="closeSaveModal()">Tilbake til oversikt</button>
+  </div>
+</div>
+</body>
+</html>
