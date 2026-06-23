@@ -190,7 +190,7 @@
   .page.active { display: block; animation: pageIn 0.22s ease; }
   /* HEADER */
   .page-header {
-    padding: 16px 20px 16px;
+    padding: 10px 20px;
     position: sticky; top: 0;
     background: rgba(238,232,223,0.92);
     backdrop-filter: blur(20px);
@@ -198,10 +198,10 @@
     z-index: 10;
     border-bottom: 1px solid var(--border);
   }
-  .page-header h1 { font-size: 20px; font-weight: 600; letter-spacing: -0.3px; font-family: 'Poppins', sans-serif; }
+  .page-header h1 { font-size: 16px; font-weight: 600; letter-spacing: -0.3px; font-family: 'Poppins', sans-serif; }
   .page-header .sub { font-size: 13px; color: var(--text2); margin-top: 2px; }
   /* SESSION PICKER */
-  .session-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 20px; }
+  .session-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 28px 20px 20px; }
   .session-card {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -219,7 +219,7 @@
   #workout-view { display: none; }
   #workout-view.active { display: block; animation: slideInRight 0.26s cubic-bezier(0.25,0.46,0.45,0.94); }
   .workout-header {
-    padding: 16px 20px 16px;
+    padding: 10px 20px;
     position: sticky; top: 0;
     background: rgba(238,232,223,0.95);
     backdrop-filter: blur(20px);
@@ -235,7 +235,7 @@
     cursor: pointer; flex-shrink: 0;
   }
   .back-btn svg { width: 18px; height: 18px; color: var(--text); }
-  .workout-title { font-size: 20px; font-weight: 600; letter-spacing: -0.3px; font-family: 'Poppins', sans-serif; }
+  .workout-title { font-size: 16px; font-weight: 600; letter-spacing: -0.3px; font-family: 'Poppins', sans-serif; }
   .workout-date { font-size: 13px; color: var(--text2); margin-top: 2px; }
   /* EXERCISE CARD */
   .ex-list { padding: 16px 20px; display: flex; flex-direction: column; gap: 12px; }
@@ -607,7 +607,7 @@
   }
 
   /* STUDIO THEME */
-  .session-list { display: flex; flex-direction: column; gap: 10px; padding: 20px; }
+  .session-list { display: flex; flex-direction: column; gap: 10px; padding: 28px 20px 20px; }
   .session-card-studio {
     border-radius: 16px !important;
     padding: 0 !important;
@@ -649,7 +649,7 @@
     font-weight: 400; letter-spacing: 0.3px;
     padding-bottom: 0;
   }
-  .page-header h1, .workout-title { font-size: 20px !important; }
+  .page-header h1, .workout-title { font-size: 16px !important; }
   .alarm-btn { display: none !important; }
 
   /* Studio solid pill */
@@ -670,10 +670,6 @@
 <div class="page active" id="page-log">
   <!-- Session picker -->
   <div id="picker-view">
-    <div class="page-header">
-      <h1>Trening</h1>
-      <div class="sub" id="picker-sub">Velg økt</div>
-    </div>
     <div class="session-grid" id="session-grid"></div>
   </div>
 
@@ -688,7 +684,6 @@
         </div>
         <div>
           <div class="workout-title" id="workout-title"></div>
-          <div class="workout-date" id="workout-date"></div>
         </div>
         <div class="alarm-btn" id="alarm-btn" onclick="toggleTimerPicker(event)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1023,7 +1018,6 @@ function startSession(sid) {
   });
 
   document.getElementById('workout-title').textContent = currentSession.label;
-  document.getElementById('workout-date').textContent = new Date().toLocaleDateString('nb-NO', { weekday: 'long', day: 'numeric', month: 'long' });
   document.getElementById('notes-input').value = '';
   document.getElementById('save-btn').textContent = 'Lagre økt';
   document.getElementById('save-btn').style.background = '';
@@ -1558,14 +1552,13 @@ function pushToSheets(workout) {
 }
 
 async function syncFromSheets() {
-  const sub = document.getElementById('picker-sub');
-  if (sub) sub.textContent = 'Henter data…';
+  showSyncStatus('Henter data…');
   try {
     // Use Google Sheets CSV export — no CORS issues
     const res = await fetch(SHEETS_URL);
     if (!res.ok) throw new Error('fetch failed');
     const data = await res.json();
-    if (!Array.isArray(data) || !data.length) { if (sub) sub.textContent = 'Velg økt'; return; }
+    if (!Array.isArray(data) || !data.length) { return; }
 
     const wMap = {};
     data.forEach(w => {
@@ -1590,11 +1583,9 @@ async function syncFromSheets() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(workouts));
     sheetsWorkouts.forEach(w => syncedIds.add(w.id));
     localStorage.setItem('wt_synced', JSON.stringify([...syncedIds]));
-    if (sub) sub.textContent = 'Velg økt';
     renderSessionPicker();
   } catch(e) {
     console.error('Sync error:', e);
-    if (sub) sub.textContent = 'Velg økt';
   }
 }
 
@@ -1609,13 +1600,14 @@ function showSyncStatus(msg, isError = false) {
   if (!el) {
     el = document.createElement('div');
     el.id = 'sync-status';
-    el.style.cssText = 'position:fixed;top:60px;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:6px 16px;font-size:12px;color:var(--text2);z-index:500;transition:opacity 0.4s;white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,0.1)';
+    el.style.cssText = 'position:fixed;bottom:calc(env(safe-area-inset-bottom,0px) + 96px);left:50%;transform:translateX(-50%);background:var(--surface);border-radius:20px;padding:6px 16px;font-size:12px;color:var(--text2);z-index:500;transition:opacity 0.4s;white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,0.15);pointer-events:none;';
     document.body.appendChild(el);
   }
   el.textContent = msg;
   el.style.color = isError ? 'var(--text3)' : 'var(--accent)';
   el.style.opacity = '1';
-  setTimeout(() => { el.style.opacity = '0'; }, 2500);
+  clearTimeout(el._hideTimer);
+  el._hideTimer = setTimeout(() => { el.style.opacity = '0'; }, 2500);
 }
 
 // ─── INIT ─────────────────────────────────────────────────────────
