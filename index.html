@@ -121,6 +121,17 @@
   .tabs.bar-natt .tab-btn.active { color: #E8E8E8 !important; }
   .tabs.bar-natt .tab-pill { background: rgba(216,216,216,0.1) !important; border: none !important; box-shadow: none !important; opacity: 1 !important; }
 
+  .tabs.bar-graa {
+    background: #9A8C82 !important;
+    border: none !important;
+    box-shadow: 0 4px 16px rgba(26,23,20,0.18) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  .tabs.bar-graa .tab-btn { color: rgba(26,23,20,0.35) !important; }
+  .tabs.bar-graa .tab-btn.active { color: #1A1714 !important; }
+  .tabs.bar-graa .tab-pill { background: rgba(26,23,20,0.10) !important; border: none !important; box-shadow: none !important; opacity: 1 !important; }
+
   /* LIQUID GLASS mode */
   .tabs.glass {
     background: rgba(255,255,255,0.01);
@@ -389,6 +400,9 @@
   }
   .save-btn:active { opacity: 0.85; transform: scale(0.98); }
   body.theme-natt .save-btn { background: #050505; color: #E8E8E8; }
+  body.theme-graa .session-card-studio { box-shadow: 0 2px 10px rgba(26,23,20,0.18); }
+  body.theme-graa .ex-card { box-shadow: 0 2px 10px rgba(26,23,20,0.18); }
+  body.theme-graa .hist-tab.active { background: rgba(26,23,20,0.15); border-color: transparent; color: #1A1714; }
   /* HISTORY */
   .hist-tabs {
     display: flex; gap: 8px; padding: 16px 20px 0;
@@ -621,7 +635,8 @@
   body.theme-sandny .session-card-studio,
   body.theme-sand .session-card-studio,
   body.theme-studio .session-card-studio,
-  body.theme-natt .session-card-studio { border-radius: 10px !important; }
+  body.theme-natt .session-card-studio,
+  body.theme-graa .session-card-studio { border-radius: 10px !important; }
   body.theme-natt .session-card-studio { box-shadow: 0 2px 10px rgba(0,0,0,0.4); }
   body.theme-natt .ex-card { box-shadow: 0 2px 10px rgba(0,0,0,0.4); }
   body.theme-natt .session-card { box-shadow: 0 2px 10px rgba(0,0,0,0.4); }
@@ -633,7 +648,7 @@
   .session-card { box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
   .hist-tab { box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
   .set-input { box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
-  .tabs.bar-sandny, .tabs.bar-sand, .tabs.bar-studio, .tabs.bar-natt { border-radius: 60px !important; }
+  .tabs.bar-sandny, .tabs.bar-sand, .tabs.bar-studio, .tabs.bar-natt, .tabs.bar-graa { border-radius: 60px !important; }
 
   .studio-bottom {
     padding: 0 18px 16px;
@@ -652,6 +667,128 @@
   .page-header h1, .workout-title { font-size: 16px !important; }
   .alarm-btn { display: none !important; }
 
+  /* ── LOG MODE TOGGLE ── */
+  .log-mode-toggle {
+    display: flex; gap: 6px; padding: 16px 20px 8px;
+  }
+  .lmt-btn {
+    flex: 1; padding: 10px; border-radius: 10px; border: none;
+    font-size: 13px; font-weight: 500; font-family: inherit;
+    background: var(--surface); color: var(--text2);
+    cursor: pointer; transition: all 0.15s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .lmt-btn.active { background: var(--accent); color: var(--bg); }
+
+  /* ── HJEM ── */
+  .hjem-body { padding: 28px 20px; }
+  .hjem-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .hjem-card {
+    background: var(--surface); border-radius: 14px; padding: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .hjem-card-wide { grid-column: 1 / -1; }
+  .hjem-card-label { font-size: 11px; font-weight: 500; color: var(--text3); letter-spacing: 0.3px; margin-bottom: 6px; text-transform: uppercase; }
+  .hjem-card-value { font-size: 22px; font-weight: 600; color: var(--text); font-family: 'Poppins', sans-serif; line-height: 1.1; }
+  .hjem-card-sub { font-size: 12px; color: var(--text2); margin-top: 4px; }
+
+  /* ── VEKT ── */
+  .vekt-body { padding: 16px 20px 0; }
+  .vekt-fab {
+    position: fixed; bottom: calc(var(--safe-bottom) + 90px); right: 20px;
+    width: 52px; height: 52px; border-radius: 50%;
+    background: var(--accent); border: none; color: var(--bg);
+    font-size: 26px; cursor: pointer; z-index: 50;
+    display: none; align-items: center; justify-content: center;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    transition: transform 0.18s;
+  }
+  #page-vekt.active .vekt-fab { display: flex; }
+  .vekt-fab:active { transform: scale(0.92); }
+
+  /* Stats */
+  .vekt-stats-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+  .vekt-stat-card { background: var(--surface); border-radius: 14px; padding: 14px 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .vekt-stat-label { font-size: 10px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 4px; }
+  .vekt-stat-value { font-size: 22px; font-weight: 600; color: var(--text); font-family: 'Poppins', sans-serif; line-height: 1.1; }
+  .vekt-stat-sub { font-size: 11px; color: var(--text2); margin-top: 3px; }
+  .vekt-stat-up { color: #c0392b; }
+  .vekt-stat-down { color: #27ae60; }
+
+  /* Chart */
+  .vekt-chart-wrap { background: var(--surface); border-radius: 14px; padding: 16px; margin-bottom: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .vekt-chart-title { font-size: 11px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 10px; }
+
+  /* List */
+  .vekt-list { display: flex; flex-direction: column; gap: 8px; }
+  .vekt-row {
+    background: var(--surface); border-radius: 14px;
+    padding: 12px 16px; display: flex; align-items: center;
+    justify-content: space-between; box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .vekt-row-main { display: flex; align-items: baseline; gap: 8px; }
+  .vekt-row-kg { font-size: 17px; font-weight: 600; color: var(--text); font-family: 'Poppins', sans-serif; }
+  .vekt-row-korr { font-size: 12px; color: var(--text3); }
+  .vekt-row-date { font-size: 12px; color: var(--text3); margin-top: 2px; }
+  .vekt-row-do { font-size: 10px; color: var(--text3); font-style: italic; }
+  .vekt-del {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: rgba(0,0,0,0.04); border: none;
+    color: var(--text3); font-size: 16px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-family: Arial, sans-serif; padding: 0; padding-bottom: 1px; flex-shrink: 0;
+  }
+  body.theme-natt .vekt-del { background: rgba(255,255,255,0.06); }
+
+  /* Add sheet */
+  .vekt-sheet-backdrop {
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0); backdrop-filter: blur(0px); -webkit-backdrop-filter: blur(0px);
+    pointer-events: none; transition: background 0.3s, backdrop-filter 0.3s;
+  }
+  .vekt-sheet-backdrop.open {
+    background: rgba(0,0,0,0.35); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+    pointer-events: all;
+  }
+  .vekt-sheet {
+    position: absolute; bottom: calc(var(--safe-bottom) + 16px);
+    left: 50%; transform: translateX(-50%) translateY(20px);
+    width: calc(100% - 32px); max-width: 420px;
+    background: var(--surface); border-radius: 24px; padding: 20px 20px 24px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    opacity: 0; transition: opacity 0.28s, transform 0.32s cubic-bezier(0.34,1.3,0.64,1);
+  }
+  .vekt-sheet-backdrop.open .vekt-sheet { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .vekt-sheet-handle { width: 36px; height: 4px; background: var(--text3); opacity: 0.4; border-radius: 2px; margin: 0 auto 18px; }
+  .vekt-sheet-title { font-size: 17px; font-weight: 600; font-family: 'Poppins', sans-serif; color: var(--text); margin-bottom: 16px; }
+  .vekt-sheet-input-row { display: flex; align-items: baseline; gap: 8px; margin-bottom: 16px; }
+  .vekt-sheet-input {
+    flex: 1; background: var(--surface2); border: none; border-radius: 12px;
+    font-size: 32px; font-weight: 600; font-family: 'Poppins', sans-serif;
+    color: var(--text); padding: 10px 16px; min-width: 0;
+  }
+  .vekt-sheet-input:focus { outline: none; }
+  .vekt-sheet-input::placeholder { color: var(--text3); }
+  .vekt-sheet-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+  .vekt-sheet-input[type=number] { -moz-appearance: textfield; appearance: textfield; }
+  .vekt-sheet-unit { font-size: 18px; color: var(--text2); font-weight: 400; }
+  .vekt-do-toggle { display: flex; gap: 8px; margin-bottom: 12px; }
+  .vekt-do-btn {
+    flex: 1; padding: 10px 8px; border-radius: 12px; border: none;
+    font-size: 12px; font-weight: 500; font-family: inherit;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    cursor: pointer; background: var(--surface2); color: var(--text2);
+    transition: all 0.15s;
+  }
+  .vekt-do-btn.active { background: var(--accent); color: var(--bg); }
+  .vekt-korr-preview { font-size: 12px; color: var(--text2); text-align: center; margin-bottom: 14px; min-height: 18px; }
+  .vekt-sheet-btn {
+    width: 100%; padding: 15px; background: var(--accent); border: none;
+    border-radius: 14px; color: var(--bg); font-size: 15px; font-weight: 600;
+    font-family: inherit; cursor: pointer; transition: opacity 0.15s, transform 0.12s;
+  }
+  .vekt-sheet-btn:active { opacity: 0.85; transform: scale(0.98); }
+
   /* Studio solid pill */
   .tabs.solid.studio-bar .tab-pill {
     background: rgba(0,0,0,0.08);
@@ -667,10 +804,35 @@
 
 <!-- PAGE: LOG -->
 
-<div class="page active" id="page-log">
+<div class="page" id="page-log">
   <!-- Session picker -->
   <div id="picker-view">
-    <div class="session-grid" id="session-grid"></div>
+    <div class="log-mode-toggle">
+      <button class="lmt-btn active" id="lmt-logg" onclick="setLogMode('logg')">Logg</button>
+      <button class="lmt-btn" id="lmt-hist" onclick="setLogMode('hist')">Historikk</button>
+    </div>
+    <div id="log-mode-logg">
+      <div class="session-grid" id="session-grid"></div>
+    </div>
+    <div id="log-mode-hist" style="display:none">
+      <div id="hist-section">
+        <div class="hist-tabs" id="hist-tabs"></div>
+        <div class="view-toggle">
+          <button class="vtog active" id="vtog-log" onclick="setView('log')">Øktlogg</button>
+          <button class="vtog" id="vtog-focus" onclick="setView('focus')">Øvelsesfokus</button>
+        </div>
+        <div id="hist-log-view">
+          <div class="hist-body" id="hist-body"></div>
+        </div>
+        <div id="hist-focus-view" style="display:none">
+          <div class="focus-ex-select">
+            <select id="focus-ex-sel" onchange="renderFocus()"></select>
+          </div>
+          <div class="chart-wrap" id="chart-wrap"></div>
+          <div class="focus-sets" id="focus-sets"></div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Workout logging -->
@@ -707,27 +869,7 @@
   </div>
 </div>
 
-<!-- PAGE: HISTORY -->
-<div class="page" id="page-hist">
-  <div class="page-header">
-    <h1>Historikk</h1>
-  </div>
-  <div class="hist-tabs" id="hist-tabs"></div>
-  <div class="view-toggle">
-    <button class="vtog active" id="vtog-log" onclick="setView('log')">Øktlogg</button>
-    <button class="vtog" id="vtog-focus" onclick="setView('focus')">Øvelsesfokus</button>
-  </div>
-  <div id="hist-log-view">
-    <div class="hist-body" id="hist-body"></div>
-  </div>
-  <div id="hist-focus-view" style="display:none">
-    <div class="focus-ex-select">
-      <select id="focus-ex-sel" onchange="renderFocus()"></select>
-    </div>
-    <div class="chart-wrap" id="chart-wrap"></div>
-    <div class="focus-sets" id="focus-sets"></div>
-  </div>
-</div>
+
 
 <!-- SETTINGS OVERLAY -->
 <div class="settings-backdrop" id="settings-backdrop" onclick="closeSettings(event)">
@@ -754,24 +896,67 @@
   </div>
 </div>
 
+<!-- PAGE: HJEM -->
+<div class="page active" id="page-hjem">
+  <div class="hjem-body" id="hjem-body"></div>
+</div>
+
+<!-- PAGE: VEKT -->
+<div class="page" id="page-vekt">
+  <div class="vekt-body">
+    <div class="vekt-stats-wrap" id="vekt-stats-wrap"></div>
+    <div class="vekt-chart-wrap" id="vekt-chart-wrap"></div>
+    <div class="vekt-list" id="vekt-list"></div>
+  </div>
+  <!-- FAB -->
+  <button class="vekt-fab" onclick="openVektSheet()">+</button>
+</div>
+
+<!-- VEKT ADD SHEET -->
+<div class="vekt-sheet-backdrop" id="vekt-sheet-backdrop" onclick="if(event.target===this)closeVektSheet()">
+  <div class="vekt-sheet">
+    <div class="vekt-sheet-handle"></div>
+    <div class="vekt-sheet-title">Logg vekt</div>
+    <div class="vekt-sheet-input-row">
+      <input class="vekt-sheet-input" id="vekt-sheet-input" type="number" inputmode="decimal" placeholder="0.0" step="0.1">
+      <span class="vekt-sheet-unit">kg</span>
+    </div>
+    <div class="vekt-do-toggle">
+      <button class="vekt-do-btn active" id="vdo-ja" onclick="setDoVal(true)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        Etter dobesøk
+      </button>
+      <button class="vekt-do-btn" id="vdo-nei" onclick="setDoVal(false)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        Ikke etter dobesøk
+      </button>
+    </div>
+    <div class="vekt-korr-preview" id="vekt-korr-preview"></div>
+    <button class="vekt-sheet-btn" onclick="submitVekt()">Lagre</button>
+  </div>
+</div>
+
 <!-- TABS -->
 <nav class="tabs" id="tab-nav">
   <div class="tab-pill" id="tab-pill"></div>
-  <button class="tab-btn active" id="tab-log" onclick="showTab('log')">
+  <button class="tab-btn active" id="tab-hjem" onclick="showTab('hjem')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M6 5v14M10 5v14M14 5v14M18 5v14"/>
-      <circle cx="6" cy="5" r="1.5" fill="currentColor" stroke="none"/>
-      <circle cx="10" cy="5" r="1.5" fill="currentColor" stroke="none"/>
-      <circle cx="14" cy="5" r="1.5" fill="currentColor" stroke="none"/>
-      <circle cx="18" cy="5" r="1.5" fill="currentColor" stroke="none"/>
+      <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+      <polyline points="9 22 9 12 15 12 15 22"/>
     </svg>
-    Logg
+    Hjem
   </button>
-  <button class="tab-btn" id="tab-hist" onclick="showTab('hist')">
+  <button class="tab-btn" id="tab-log" onclick="showTab('log')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+      <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 12h8M8 8h8M8 16h5"/>
     </svg>
-    Historikk
+    Treningsøkter
+  </button>
+  <button class="tab-btn" id="tab-vekt" onclick="showTab('vekt')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 2a5 5 0 015 5c0 1.5-.66 2.85-1.7 3.78L17 21H7l1.7-10.22A5 5 0 0112 2z"/>
+    </svg>
+    Vekt
   </button>
   <button class="tab-btn" id="tab-settings" onclick="openSettings()">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -885,6 +1070,19 @@ const THEMES = {
       '--header-bg2':'rgba(17,17,17,0.95)','--active-text':'#111111',
       '--sheet-bg':'rgba(23,23,23,0.97)'
     }
+  },
+  graa: {
+    name: 'Grå',
+    desc: 'Varm mellomgrå',
+    swatches: ['#8C7E74','#9A8C82','#1A1714'],
+    vars: {
+      '--bg':'#8C7E74','--surface':'#9A8C82','--surface2':'#857870',
+      '--border':'transparent','--accent':'#1A1714','--accent-dim':'rgba(26,23,20,0.10)',
+      '--text':'#1A1714','--text2':'rgba(26,23,20,0.55)','--text3':'rgba(26,23,20,0.32)',
+      '--island-bg':'rgba(154,140,130,0.97)','--island-solid':'rgba(154,140,130,0.97)','--header-bg':'rgba(140,126,116,0.94)',
+      '--header-bg2':'rgba(140,126,116,0.98)','--active-text':'#1A1714',
+      '--sheet-bg':'rgba(154,140,130,0.98)'
+    }
   }
 };
 
@@ -914,10 +1112,16 @@ const NATT_COLORS = {
   benA: { bg: '#171717', text: '#E8E8E8' },
   benB: { bg: '#171717', text: '#E8E8E8' },
 };
+const GRAA_COLORS = {
+  ukA:  { bg: '#9A8C82', text: '#1A1714' },
+  ukB:  { bg: '#9A8C82', text: '#1A1714' },
+  benA: { bg: '#9A8C82', text: '#1A1714' },
+  benB: { bg: '#9A8C82', text: '#1A1714' },
+};
 
 const STORAGE_KEY = 'wt_v3';
 const SEED_DATA = [];
-const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxe7KxNUFwrO5PEQUq7VpFheLsLp0zTsIz3xvzjl8UXcVH0cgbN8z720YAm1ExOeeZrEA/exec';
+const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbx7aEWT56SKHTOjMtKe6gXaEOhuRd4S1lQgp839ukjMjisKMzrCIsefxmkrIJ7IKrCB4A/exec';
 let workouts = (() => {
   const stored = localStorage.getItem(STORAGE_KEY);
   if (stored) return JSON.parse(stored);
@@ -934,14 +1138,23 @@ let syncedIds = new Set(JSON.parse(localStorage.getItem('wt_synced') || '[]'));
 function showTab(tab) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => { b.classList.remove('active'); b.classList.remove('pop'); });
-  document.getElementById('page-' + tab).classList.add('active');
+  // Logg-siden har to under-views, vis riktig
+  if (tab === 'log') {
+    document.getElementById('page-log').classList.add('active');
+  } else {
+    document.getElementById('page-' + tab).classList.add('active');
+  }
   const btn = document.getElementById('tab-' + tab);
   btn.classList.add('active');
   void btn.offsetWidth;
   btn.classList.add('pop');
   btn.addEventListener('animationend', () => btn.classList.remove('pop'), { once: true });
   movePill(btn);
-  if (tab === 'hist') renderHistTabs();
+  if (tab === 'log') {
+    setLogMode('logg');
+  }
+  if (tab === 'hjem') renderHjem();
+  if (tab === 'vekt') renderVekt();
 }
 
 function movePill(btn) {
@@ -970,7 +1183,7 @@ function initPill() {
 function renderSessionPicker() {
   const grid = document.getElementById('session-grid');
   const _theme = typeof currentTheme !== 'undefined' ? currentTheme : (localStorage.getItem('wt_theme') || 'sand');
-  const isStudio = _theme === 'studio' || _theme === 'sand' || _theme === 'sandny' || _theme === 'natt';
+  const isStudio = _theme === 'studio' || _theme === 'sand' || _theme === 'sandny' || _theme === 'natt' || _theme === 'graa';
   grid.className = isStudio ? 'session-list' : 'session-grid';
   grid.innerHTML = Object.values(SESSIONS).map(s => {
     const last = workouts.find(w => w.sessionId === s.id);
@@ -981,10 +1194,10 @@ function renderSessionPicker() {
       const col = _theme === 'sand' ? SAND_COLORS[s.id] :
         _theme === 'sandny' ? KALD_COLORS[s.id] :
         _theme === 'natt' ? NATT_COLORS[s.id] :
+        _theme === 'graa' ? GRAA_COLORS[s.id] :
         STUDIO_COLORS[s.id];
-      const _borderCol = _theme === 'sandny' ? '#D7D7CB' : _theme === 'sand' ? '#cbbfa3' : _theme === 'natt' ? '#3A3A3A' : '#dcc4c4';
       const _dateLabel = 'Sist: ' + lastStr;
-      const _dateColor = _theme === 'natt' ? 'rgba(232,232,232,0.4)' : 'rgba(0,0,0,0.4)';
+      const _dateColor = _theme === 'natt' ? 'rgba(232,232,232,0.4)' : 'rgba(0,0,0,0.35)';
       return `<div class="session-card session-card-studio" style="background:${col.bg}" onclick="startSession('${s.id}')">
         <div class="studio-bottom">
           <div class="studio-name" style="color:${col.text}">${s.label}</div>
@@ -1613,7 +1826,256 @@ function showSyncStatus(msg, isError = false) {
 // ─── INIT ─────────────────────────────────────────────────────────
 renderSessionPicker();
 syncFromSheets();
-setTimeout(() => { initPill(); applyGlassMode(false); }, 100);
+setTimeout(() => {
+  initPill();
+  applyGlassMode(false);
+  renderHjem();
+  // Input event for korr preview
+  const vsi = document.getElementById('vekt-sheet-input');
+  if (vsi) vsi.addEventListener('input', updateKorrPreview);
+}, 100);
+
+// ─── HJEM ─────────────────────────────────────────────────────────
+function renderHjem() {
+  const container = document.getElementById('hjem-body');
+  if (!container) return;
+  // Siste økt
+  const lastWkt = workouts[0];
+  // Siste vekt
+  const vektData = JSON.parse(localStorage.getItem('vekt_v1') || '[]');
+  const lastVekt = vektData[vektData.length - 1];
+  // Streak: antall ulike uker med minst én økt
+  const weeks = new Set(workouts.map(w => w.date.substring(0, 8)));
+  const streak = weeks.size;
+
+  const lastWktHtml = lastWkt ? `
+    <div class="hjem-card">
+      <div class="hjem-card-label">Siste økt</div>
+      <div class="hjem-card-value">${lastWkt.sessionLabel}</div>
+      <div class="hjem-card-sub">${new Date(lastWkt.date).toLocaleDateString('nb-NO', { weekday: 'long', day: 'numeric', month: 'short' })}</div>
+    </div>` : `
+    <div class="hjem-card">
+      <div class="hjem-card-label">Siste økt</div>
+      <div class="hjem-card-value" style="opacity:0.35">Ingen økt logget</div>
+    </div>`;
+
+  const vektHtml = lastVekt ? `
+    <div class="hjem-card">
+      <div class="hjem-card-label">Kroppsvekt</div>
+      <div class="hjem-card-value">${lastVekt.kg} <span style="font-size:14px;font-weight:400">kg</span></div>
+      <div class="hjem-card-sub">${new Date(lastVekt.date).toLocaleDateString('nb-NO', { day: 'numeric', month: 'short' })}</div>
+    </div>` : `
+    <div class="hjem-card">
+      <div class="hjem-card-label">Kroppsvekt</div>
+      <div class="hjem-card-value" style="opacity:0.35">Ikke logget</div>
+    </div>`;
+
+  container.innerHTML = `
+    <div class="hjem-grid">
+      ${lastWktHtml}
+      ${vektHtml}
+      <div class="hjem-card hjem-card-wide">
+        <div class="hjem-card-label">Treningsøkter totalt</div>
+        <div class="hjem-card-value">${workouts.length}</div>
+        <div class="hjem-card-sub">${streak} uker med trening</div>
+      </div>
+      <div class="hjem-card hjem-card-wide" style="cursor:pointer" onclick="showTab('log')">
+        <div class="hjem-card-label">Start økt</div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div class="hjem-card-value" style="font-size:15px;font-weight:500">Logg en ny treningsøkt</div>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+      </div>
+    </div>`;
+}
+
+// ─── VEKT ─────────────────────────────────────────────────────────
+const VEKT_KEY = 'vekt_v1';
+let vektDoVal = true; // true = etter dobesøk
+
+function getVektData() { return JSON.parse(localStorage.getItem(VEKT_KEY) || '[]'); }
+function saveVektData(data) { localStorage.setItem(VEKT_KEY, JSON.stringify(data)); }
+
+// ─── VEKT SHEET ───────────────────────────────────────────────────
+function openVektSheet() {
+  document.getElementById('vekt-sheet-backdrop').classList.add('open');
+  vektDoVal = true;
+  setDoVal(true);
+  document.getElementById('vekt-sheet-input').value = '';
+  updateKorrPreview();
+  setTimeout(() => document.getElementById('vekt-sheet-input').focus(), 200);
+}
+function closeVektSheet() {
+  document.getElementById('vekt-sheet-backdrop').classList.remove('open');
+}
+function setDoVal(val) {
+  vektDoVal = val;
+  document.getElementById('vdo-ja').classList.toggle('active', val);
+  document.getElementById('vdo-nei').classList.toggle('active', !val);
+  updateKorrPreview();
+}
+function updateKorrPreview() {
+  const input = document.getElementById('vekt-sheet-input');
+  const prev = document.getElementById('vekt-korr-preview');
+  const raw = parseFloat(input.value);
+  if (!raw || isNaN(raw)) { prev.textContent = ''; return; }
+  const korr = vektDoVal ? raw : raw - 0.4;
+  prev.textContent = vektDoVal
+    ? `Korrigert vekt: ${korr.toFixed(1)} kg (ingen korrigering)`
+    : `Korrigert vekt: ${korr.toFixed(1)} kg (−0.4 kg)`;
+}
+function submitVekt() {
+  const raw = parseFloat(document.getElementById('vekt-sheet-input').value);
+  if (!raw || raw < 20 || raw > 300) return;
+  const korr = vektDoVal ? raw : parseFloat((raw - 0.4).toFixed(1));
+  const entry = { date: new Date().toISOString(), kg: raw, korr, do: vektDoVal };
+  const data = getVektData();
+  data.push(entry);
+  saveVektData(data);
+  pushVektToSheets(entry);
+  closeVektSheet();
+  renderVekt();
+  renderHjem();
+}
+
+// ─── VEKT SHEETS SYNC ─────────────────────────────────────────────
+function pushVektToSheets(entry) {
+  if (!navigator.onLine) return;
+  fetch(SHEETS_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ type: 'vekt', date: entry.date, kg: entry.kg, korr: entry.korr, do: entry.do })
+  }).catch(() => {});
+}
+
+// ─── RENDER VEKT ──────────────────────────────────────────────────
+function renderVekt() {
+  const data = getVektData();
+  const statsEl = document.getElementById('vekt-stats-wrap');
+  const chartEl = document.getElementById('vekt-chart-wrap');
+  const listEl = document.getElementById('vekt-list');
+  if (!listEl) return;
+
+  if (!data.length) {
+    if (statsEl) statsEl.innerHTML = '';
+    if (chartEl) chartEl.innerHTML = '';
+    listEl.innerHTML = '<div style="padding:40px 20px;text-align:center;color:var(--text3);font-size:14px">Ingen vekt logget ennå.<br>Trykk + for å starte.</div>';
+    return;
+  }
+
+  const korrs = data.map(d => d.korr || d.kg);
+  const last = korrs[korrs.length - 1];
+
+  // Siste måned (30 dager)
+  const now = new Date();
+  const monthAgo = new Date(now - 30 * 864e5);
+  const monthData = data.filter(d => new Date(d.date) >= monthAgo);
+  const monthChange = monthData.length >= 2
+    ? (monthData[monthData.length-1].korr || monthData[monthData.length-1].kg) - (monthData[0].korr || monthData[0].kg)
+    : null;
+
+  // Ukentlig snitt: total endring / antall uker
+  const firstDate = new Date(data[0].date);
+  const weeks = Math.max(1, (now - firstDate) / (7 * 864e5));
+  const totalChange = data.length >= 2 ? last - (data[0].korr || data[0].kg) : null;
+  const weeklyAvg = totalChange !== null ? totalChange / weeks : null;
+
+  // Stats-kort
+  if (statsEl) {
+    const fmtChange = (val) => {
+      if (val === null) return { txt: '—', cls: '' };
+      const sign = val > 0 ? '+' : '';
+      const cls = val > 0 ? 'vekt-stat-up' : val < 0 ? 'vekt-stat-down' : '';
+      return { txt: `${sign}${val.toFixed(1)} kg`, cls };
+    };
+    const mc = fmtChange(monthChange);
+    const wc = fmtChange(weeklyAvg);
+    statsEl.innerHTML = `
+      <div class="vekt-stat-card">
+        <div class="vekt-stat-label">Siste måling</div>
+        <div class="vekt-stat-value">${last.toFixed(1)} kg</div>
+        <div class="vekt-stat-sub">${new Date(data[data.length-1].date).toLocaleDateString('nb-NO', {day:'numeric',month:'short'})}</div>
+      </div>
+      <div class="vekt-stat-card">
+        <div class="vekt-stat-label">Siste 30 dager</div>
+        <div class="vekt-stat-value ${mc.cls}">${mc.txt}</div>
+        <div class="vekt-stat-sub">${monthData.length >= 2 ? monthData.length + ' målinger' : 'For lite data'}</div>
+      </div>
+      <div class="vekt-stat-card" style="grid-column:1/-1">
+        <div class="vekt-stat-label">Ukentlig snitt</div>
+        <div class="vekt-stat-value ${wc.cls}">${wc.txt}</div>
+        <div class="vekt-stat-sub">${data.length >= 2 ? 'Basert på ' + Math.round(weeks) + ' uker' : 'For lite data'}</div>
+      </div>`;
+  }
+
+  // Graf (korrigert vekt, nyeste 60 datapunkter)
+  if (chartEl) {
+    const recent = data.slice(-60);
+    const vals = recent.map(d => d.korr || d.kg);
+    if (vals.length >= 2) {
+      const minV = Math.min(...vals) - 0.5;
+      const maxV = Math.max(...vals) + 0.5;
+      const range = maxV - minV || 1;
+      const W = 300, H = 80;
+      const toX = i => (i / (vals.length - 1)) * W;
+      const toY = v => H - ((v - minV) / range) * H;
+      const pts = vals.map((v, i) => `${toX(i).toFixed(1)},${toY(v).toFixed(1)}`).join(' ');
+      // Fyllt area
+      const areaPath = `M${toX(0).toFixed(1)},${H} ` + vals.map((v,i) => `L${toX(i).toFixed(1)},${toY(v).toFixed(1)}`).join(' ') + ` L${toX(vals.length-1).toFixed(1)},${H} Z`;
+      chartEl.innerHTML = `
+        <div class="vekt-chart-title">Korrigert vekt</div>
+        <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="width:100%;height:90px;display:block">
+          <defs>
+            <linearGradient id="vg" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="var(--accent)" stop-opacity="0.18"/>
+              <stop offset="100%" stop-color="var(--accent)" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <path d="${areaPath}" fill="url(#vg)"/>
+          <polyline fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" points="${pts}"/>
+          <circle cx="${toX(vals.length-1).toFixed(1)}" cy="${toY(vals[vals.length-1]).toFixed(1)}" r="2.5" fill="var(--accent)"/>
+        </svg>
+        <div style="display:flex;justify-content:space-between;margin-top:4px">
+          <span style="font-size:10px;color:var(--text3)">${new Date(recent[0].date).toLocaleDateString('nb-NO',{day:'numeric',month:'short'})}</span>
+          <span style="font-size:10px;color:var(--text3)">${new Date(recent[recent.length-1].date).toLocaleDateString('nb-NO',{day:'numeric',month:'short'})}</span>
+        </div>`;
+    } else {
+      chartEl.innerHTML = '<div class="vekt-chart-title">Korrigert vekt</div><div style="font-size:12px;color:var(--text3);text-align:center;padding:20px 0">Logg minst to målinger for å se grafen</div>';
+    }
+  }
+
+  // Liste (nyeste først)
+  const sorted = [...data].map((d, i) => ({ ...d, origIdx: i })).reverse();
+  listEl.innerHTML = sorted.map(d => `
+    <div class="vekt-row">
+      <div>
+        <div class="vekt-row-main">
+          <span class="vekt-row-kg">${(d.kg).toFixed(1)} kg</span>
+          ${d.korr !== d.kg ? `<span class="vekt-row-korr">→ ${d.korr.toFixed(1)} kg korrigert</span>` : ''}
+        </div>
+        <div class="vekt-row-date">${new Date(d.date).toLocaleDateString('nb-NO', { weekday:'long', day:'numeric', month:'short' })}</div>
+        <div class="vekt-row-do">${d.do ? 'Etter dobesøk' : 'Ikke etter dobesøk'}</div>
+      </div>
+      <button class="vekt-del" onclick="deleteVekt(${d.origIdx})">×</button>
+    </div>`).join('');
+}
+
+function deleteVekt(idx) {
+  const data = getVektData();
+  data.splice(idx, 1);
+  saveVektData(data);
+  renderVekt();
+  renderHjem();
+}
+
+// ─── LOG MODE TOGGLE ──────────────────────────────────────────────
+function setLogMode(mode) {
+  document.getElementById('log-mode-logg').style.display = mode === 'logg' ? '' : 'none';
+  document.getElementById('log-mode-hist').style.display = mode === 'hist' ? '' : 'none';
+  document.getElementById('lmt-logg').classList.toggle('active', mode === 'logg');
+  document.getElementById('lmt-hist').classList.toggle('active', mode === 'hist');
+  if (mode === 'hist') renderHistTabs();
+}
 
 
 
@@ -1624,7 +2086,7 @@ function applyTheme(id) {
   for (const [k, v] of Object.entries(t.vars)) root.setProperty(k, v);
   // apply dynamic vars
   const tabs = document.querySelector('.tabs');
-  const FORCED_SOLID = ['studio', 'sand', 'sandny', 'natt'];
+  const FORCED_SOLID = ['studio', 'sand', 'sandny', 'natt', 'graa'];
   tabs.className = [...tabs.classList].filter(c => !c.startsWith('bar-') && !['solid','glass'].includes(c)).join(' ');
   tabs.style.background = '';
   tabs.style.border = '';
@@ -1649,6 +2111,7 @@ function applyTheme(id) {
   document.body.classList.toggle('theme-sand', id === 'sand');
   document.body.classList.toggle('theme-studio', id === 'studio');
   document.body.classList.toggle('theme-natt', id === 'natt');
+  document.body.classList.toggle('theme-graa', id === 'graa');
   currentTheme = id;
   localStorage.setItem('wt_theme', id);
   renderThemeGrid();
