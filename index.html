@@ -1932,10 +1932,10 @@ function submitVekt() {
   const data = getVektData();
   data.push(entry);
   saveVektData(data);
-  pushVektToSheets(entry);
   closeVektSheet();
   renderVekt();
   renderHjem();
+  setTimeout(() => pushVektToSheets(entry), 600);
 }
 
 // ─── VEKT SHEETS SYNC ─────────────────────────────────────────────
