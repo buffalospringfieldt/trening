@@ -1928,7 +1928,7 @@ function submitVekt() {
   const raw = parseFloat(document.getElementById('vekt-sheet-input').value);
   if (!raw || raw < 20 || raw > 300) return;
   const korr = vektDoVal ? raw : parseFloat((raw - 0.4).toFixed(1));
-  const entry = { date: new Date().toISOString(), kg: raw, korr, do: vektDoVal };
+  const entry = { date: new Date().toISOString(), kg: raw, korr, etter_do: vektDoVal };
   const data = getVektData();
   data.push(entry);
   saveVektData(data);
@@ -1944,7 +1944,7 @@ function pushVektToSheets(entry) {
   fetch(SHEETS_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ type: 'vekt', date: entry.date, kg: entry.kg, korr: entry.korr, do: entry.do })
+    body: JSON.stringify({ type: 'vekt', date: entry.date, kg: entry.kg, korr: entry.korr, etter_do: entry.etter_do })
   }).catch(() => {});
 }
 
@@ -2054,7 +2054,7 @@ function renderVekt() {
           ${d.korr !== d.kg ? `<span class="vekt-row-korr">→ ${d.korr.toFixed(1)} kg korrigert</span>` : ''}
         </div>
         <div class="vekt-row-date">${new Date(d.date).toLocaleDateString('nb-NO', { weekday:'long', day:'numeric', month:'short' })}</div>
-        <div class="vekt-row-do">${d.do ? 'Etter dobesøk' : 'Ikke etter dobesøk'}</div>
+        <div class="vekt-row-do">${d.etter_do ? 'Etter dobesøk' : 'Ikke etter dobesøk'}</div>
       </div>
       <button class="vekt-del" onclick="deleteVekt(${d.origIdx})">×</button>
     </div>`).join('');
