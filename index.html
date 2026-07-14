@@ -1940,12 +1940,15 @@ function submitVekt() {
 
 // ─── VEKT SHEETS SYNC ─────────────────────────────────────────────
 function pushVektToSheets(entry) {
-  if (!navigator.onLine) return;
+  if (!navigator.onLine) { showSyncStatus('Offline — vekt ikke lagret', true); return; }
   fetch(SHEETS_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ type: 'vekt', date: entry.date, kg: entry.kg, korr: entry.korr, etter_do: entry.etter_do })
-  }).catch(() => {});
+  })
+  .then(r => r.text())
+  .then(t => showSyncStatus(t === 'OK' ? '✓ Vekt lagret' : 'Feil: ' + t, t !== 'OK'))
+  .catch(err => showSyncStatus('Feil: ' + err.message, true));
 }
 
 // ─── RENDER VEKT ──────────────────────────────────────────────────
