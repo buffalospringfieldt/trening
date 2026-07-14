@@ -1943,7 +1943,6 @@ function pushVektToSheets(entry) {
   if (!navigator.onLine) { showSyncStatus('Offline — vekt ikke lagret', true); return; }
   fetch(SHEETS_URL, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ type: 'vekt', date: entry.date, kg: entry.kg, korr: entry.korr, etter_do: entry.etter_do })
   })
   .then(r => r.text())
