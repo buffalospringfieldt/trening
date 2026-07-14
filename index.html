@@ -1767,36 +1767,45 @@ function pushToSheets(workout) {
 async function syncFromSheets() {
   showSyncStatus('Henter data…');
   try {
-    // Use Google Sheets CSV export — no CORS issues
     const res = await fetch(SHEETS_URL);
     if (!res.ok) throw new Error('fetch failed');
     const data = await res.json();
-    if (!Array.isArray(data) || !data.length) { return; }
 
-    const wMap = {};
-    data.forEach(w => {
-      const dateKey = (w.date || '').substring(0, 10);
-      const key = w.session + '|' + dateKey;
-      if (!wMap[key]) wMap[key] = {
-        id: Math.abs(hashStr(key)),
-        date: w.date,
-        sessionId: Object.values(SESSIONS).find(s => s.label === w.session)?.id || w.session,
-        sessionLabel: w.session,
-        exercises: w.exercises,
-        notes: ''
-      };
-    });
+    // Treningsøkter
+    const workoutData = Array.isArray(data.workouts) ? data.workouts : (Array.isArray(data) ? data : []);
+    if (workoutData.length) {
+      const wMap = {};
+      workoutData.forEach(w => {
+        const dateKey = (w.date || '').substring(0, 10);
+        const key = w.session + '|' + dateKey;
+        if (!wMap[key]) wMap[key] = {
+          id: Math.abs(hashStr(key)),
+          date: w.date,
+          sessionId: Object.values(SESSIONS).find(s => s.label === w.session)?.id || w.session,
+          sessionLabel: w.session,
+          exercises: w.exercises,
+          notes: ''
+        };
+      });
+      const sheetsWorkouts = Object.values(wMap).map(w => {
+        const d = new Date(w.date);
+        return { ...w, date: isNaN(d) ? w.date : d.toISOString() };
+      }).sort((a,b) => b.date.localeCompare(a.date));
+      workouts = sheetsWorkouts;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(workouts));
+      sheetsWorkouts.forEach(w => syncedIds.add(w.id));
+      localStorage.setItem('wt_synced', JSON.stringify([...syncedIds]));
+      renderSessionPicker();
+    }
 
-    const sheetsWorkouts = Object.values(wMap).map(w => {
-      const d = new Date(w.date);
-      return { ...w, date: isNaN(d) ? w.date : d.toISOString() };
-    }).sort((a,b) => b.date.localeCompare(a.date));
+    // Vekt
+    const vektData = Array.isArray(data.vekt) ? data.vekt : [];
+    if (vektData.length) {
+      saveVektData(vektData);
+      renderVekt();
+      renderHjem();
+    }
 
-    workouts = sheetsWorkouts;
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(workouts));
-    sheetsWorkouts.forEach(w => syncedIds.add(w.id));
-    localStorage.setItem('wt_synced', JSON.stringify([...syncedIds]));
-    renderSessionPicker();
   } catch(e) {
     console.error('Sync error:', e);
   }
